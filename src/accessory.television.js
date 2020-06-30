@@ -179,7 +179,10 @@ class TelevisionAccessory extends Accessory {
         }
 
         if (message && message.appBundleIdentifier && this.config.inputs) {
-            let input = this.config.inputs.filter(input => input.applicationId && input.applicationId === message.appBundleIdentifier);
+            let input = this.config.inputs.filter(input => {
+                input.applicationId && this.platform.debug(`${input.applicationId} : ${message.appBundleIdentifier}`);
+                return input.applicationId && input.applicationId === message.appBundleIdentifier;
+            });
 
             if(input && input.length) {
                 input = input[0];
