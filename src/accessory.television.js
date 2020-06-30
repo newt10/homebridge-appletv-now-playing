@@ -181,7 +181,11 @@ class TelevisionAccessory extends Accessory {
         if (message && message.appBundleIdentifier && this.config.inputs) {
             let input = this.config.inputs.filter(input => input.applicationId && input.applicationId === message.appBundleIdentifier);
 
-            if(input) {
+            if(input && input.length) {
+                input = input[0];
+
+                this.platform.debug(`switching to ${this.type} input ${input.name} [${input.identifier}] for accessory (${this.device.name} [${this.device.uid}]).`);
+
                 this.input = input;
                 this.tvService.updateCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier, this.input.identifier);
             }
