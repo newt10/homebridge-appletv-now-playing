@@ -43,8 +43,8 @@ Configuration can be done using [Homebridge Config UI X](https://github.com/oznu
   * **credentials**: The credentials needed to authorise connection to the device.
   * **showTvAccessory**: Expose a TV Accessory for the device.
   * **inputs**: A list of applications (shown as inputs) for the TV Accessory.
-  * * **name**: The application name.
-  * * **index**: The location (index) of the application on your Apple TV home screen. For example, Netflix is at index 9 in this screenshot. ![Apple TV Home Scree](screenshots/apple_tv.jpg)
+    * **name**: The application name.
+    * **index**: The location (index) of the application on your Apple TV home screen. For example, Netflix is at index 9 in this screenshot. ![Apple TV Home Scree](screenshots/apple_tv.jpg)
 
 ## Retrieving credentials
 
