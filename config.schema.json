@@ -51,6 +51,11 @@
                                         "description": "In the application grid on your apple tv, at which position is your app?",
                                         "type": "integer",
                                         "required": true
+                                    },
+                                    "applicationId": {
+                                        "title": "Application Bundle Id",
+                                        "description": "The Application Bundle Id used to change current input when now playing information is changed.",
+                                        "type": "string"
                                     }
                                 }
                             }
