@@ -1,3 +1,5 @@
+const appletv = require("node-appletv-x");
+
 class Accessory {
     constructor(type, platform, config, device) {
         this.configureAccessory = this.configureAccessory.bind(this);
@@ -57,10 +59,10 @@ class Accessory {
         service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
     }
 
-    async onPower(value, next) {
+    async onPower(value, next, service) {
         clearTimeout(this.powerTimer);
 
-        this.platform.debug(`turning ${this.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
+        this.platform.debug(`turning ${service.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
 
         if (value && !this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);

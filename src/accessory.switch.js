@@ -1,4 +1,3 @@
-const appletv = require("node-appletv-x");
 const Accessory = require("./accessory");
 
 class SwitchAccessory extends Accessory {
