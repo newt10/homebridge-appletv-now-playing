@@ -169,8 +169,6 @@ class TelevisionAccessory extends Accessory {
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
 
                 next(null);
-
-                this.device.requestPlaybackQueueWithWait().then(this.platform.debug);
             }, 1000);
         }, 2000);
     }
