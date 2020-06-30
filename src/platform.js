@@ -64,7 +64,6 @@ class Platform {
             this.accessories.push(accessory);
 
             this.debug(`Loaded cached accessory width id ${accessory.UUID}`);
-            this.debug(accessory.context);
         }
     };
 
@@ -102,31 +101,6 @@ class Platform {
                 this.unregisterAccessories([accessory]);
             }
         }
-
-        // let foundAccessory = this.config.devices.filter((deviceConfiguration) => {
-        //     let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-
-        //     if(accessory.context.uid === credentials.uniqueIdentifier) {
-
-        //     }
-
-        //     return accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === SwitchAccessory.Type;
-        // });
-
-        // if (!foundAccessory) {
-        //     this.debug(`Removing orphaned ${SwitchAccessory.Type} accessory [${accessory.uid}].`);
-        //     this.unregisterAccessories([accessory]);
-        // }
-
-        // foundAccessory = this.config.devices.filter((deviceConfiguration) => {
-        //     let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-        //     return deviceConfiguration.showTVAccessory && accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === TelevisionAccessory.Type;
-        // });
-
-        // if (!foundAccessory) {
-        //     this.debug(`Removing orphaned ${TelevisionAccessory.Type} accessory [${accessory.uid}].`);
-        //     this.unregisterAccessories([accessory]);
-        // }
     };
 
     async loadDevice(deviceConfiguration) {
