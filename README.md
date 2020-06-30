@@ -10,9 +10,14 @@ The media type is calculated by checking artist and album information. This char
 
 **Note:** The now playing information are exposed as custom charactersitics, which means that the Apple Home App will not be able to read these. You will need to use an app such as [Home+ 4](https://apps.apple.com/us/app/home-4/id995994352) or [Eve for Homekit](https://apps.apple.com/us/app/eve-for-homekit/id917695792).
 
-**Note:** The TV Accessory is an _experimental_ feature, so please use it expecting things to not work. 
+### TV Accessory
 
-  It launches apps by mimicking button presses to the location of the app on the home screen and selecting it. It seems to be working fairly well and is a good substitute for when / if true application launching is available. I am looking into how I might be able to get the currently launched application without the now playing info so that the input selection can be updated if it changes outside of the accessory.
+The TV Accessory is an _experimental_ feature, so please use it **expecting things to not work**.
+
+#### Limitations
+
+* The TV Accessory do not show up in, and hence cannot be used to trigger automations in the [Home+ 4](https://apps.apple.com/us/app/home-4/id995994352) or [Eve for Homekit](https://apps.apple.com/us/app/eve-for-homekit/id917695792) apps.
+* Apps are launched by mimicking button presses to highlight the app at the index specified in the config. It seems to be working fairly well and is a good substitute for when / if true application launching is available.
 
 ## Configration
 
@@ -29,7 +34,14 @@ Configuration can be done using [Homebridge Config UI X](https://github.com/oznu
   "devices": [        
     {            
       "name": "Lounge Apple TV",            
-      "credentials": "C8309D5A-4AAD-4338-8B45...."        
+      "credentials": "C8309D5A-4AAD-4338-8B45....",
+      "showTVAccessory": true,
+      "inputs": [
+        {
+          "name": "Netflix", 
+          "index": 9
+        }
+      ]
     }    
   ]
 }
