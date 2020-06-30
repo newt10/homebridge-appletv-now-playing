@@ -89,9 +89,8 @@ class Platform {
                 if(accessory.context.uid === device.parsedCredentials.uniqueIdentifier) {
                     accessoryFound = true;
 
-                    this.debug(device);
-
-                    if(!device.showTVAccessory && accessory.context.type === TelevisionAccessory.Type) {
+                    if(device.showTVAccessory === false && accessory.context.type === TelevisionAccessory.Type) {
+                        this.debug(device.showTVAccessory);
                         this.debug(`Removing orphaned ${accessory.context.type} accessory [${accessory.context.uid}].`);
                         this.unregisterAccessories([accessory]);
                     }
