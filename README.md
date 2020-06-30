@@ -10,7 +10,7 @@ The media type is calculated by checking artist and album information. This char
 
 **Note:** The now playing information are exposed as custom charactersitics, which means that the Apple Home App will not be able to read these. You will need to use an app such as [Home+ 4](https://apps.apple.com/us/app/home-4/id995994352) or [Eve for Homekit](https://apps.apple.com/us/app/eve-for-homekit/id917695792).
 
-### TV Accessory
+### ![Television](screenshots/television.png) TV Accessory
 
 The TV Accessory is an _experimental_ feature, so please use it **expecting things to not work**.
 
