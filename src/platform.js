@@ -64,6 +64,7 @@ class Platform {
             this.accessories.push(accessory);
 
             this.debug(`Loaded cached accessory width id ${accessory.UUID}`);
+            this.debug(accessory.context);
         }
     };
 
