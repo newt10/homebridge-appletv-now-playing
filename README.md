@@ -8,13 +8,13 @@ This plugin exposes the Apple TV as a switch device, with the switch power state
 
 The media type is calculated by checking artist and album information. This characterist comes in handy if you would like to setup automations that dim light for only videos and not music.
 
-** Note: ** The now playing information are exposed as custom charactersitics, which means that the Apple Home App will not be able to read these. You will need to use an app such as [Home+ 4]:https://apps.apple.com/us/app/home-4/id995994352 or [Eve for Homekit]:https://apps.apple.com/us/app/eve-for-homekit/id917695792.
+** Note: ** The now playing information are exposed as custom charactersitics, which means that the Apple Home App will not be able to read these. You will need to use an app such as [Home+ 4](https://apps.apple.com/us/app/home-4/id995994352) or [Eve for Homekit](https://apps.apple.com/us/app/eve-for-homekit/id917695792).
 
 ## Configration
 
-Configuration can be done using [Homebridge Config UI X]:https://github.com/oznu/homebridge-config-ui-x.
+Configuration can be done using [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x).
 
-![Configuration](screenshots/configuration.png?2020-01-07)
+![Configuration](screenshots/configuration.png)
 
 ## Sample Configuration
 
@@ -38,6 +38,9 @@ Configuration can be done using [Homebridge Config UI X]:https://github.com/oznu
   * **name**: The name you would like to expose for the device.
   * **credentials**: The credentials needed to authorise connection to the device.
   * **showTvAccessory**: Expose a TV Accessory for the device.
+  * **inputs**: A list of applications (shown as inputs) for the TV Accessory.
+  * * **name**: The application name.
+  * * **index**: The location (index) of the application on your Apple TV home screen. For example, Netflix is at index 9 in this screenshot. ![Apple TV Home Scree](screenshots/apple_tv.jpg)
 
 ## Retrieving credentials
 
