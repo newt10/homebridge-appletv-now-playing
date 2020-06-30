@@ -65,7 +65,7 @@ class TelevisionAccessory extends Accessory {
 
             this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("set", this.onPower);
             this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier)
-                .on("set", this.setInput);
+                .on("set", this.setInput)
                 .on("get", this.getInput);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
