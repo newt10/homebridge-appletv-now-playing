@@ -145,10 +145,10 @@ class TelevisionAccessory extends Accessory {
     }
 
     async setInput(value, next) {
-        this.platform.debug(`switching to ${this.type} input ${value} for accessory (${this.device.name} [${this.device.uid}]).`);
-
         this.input = this.config.inputs[value];
         this.input.identifier = value;
+
+        this.platform.debug(`switching to ${this.type} input ${this.input.name} [${this.input.identifier}] for accessory (${this.device.name} [${this.device.uid}]).`);
 
         let column = this.input.index % 5;
         let row = (this.input.index - column) / 5;
@@ -176,8 +176,10 @@ class TelevisionAccessory extends Accessory {
 
     async getInput(next) {
         if (this.input) {
+            this.platform.debug(`setting active identifier for ${this.type} service to input ${this.input.name} [${this.input.identifier}] for accessory (${this.device.name} [${this.device.uid}]).`);
             next(null, this.input.identifier);
         } else {
+            this.platform.debug(`unable to set active identifier for ${this.type} service for accessory (${this.device.name} [${this.device.uid}]).`);
             next(null, 0);
         }
     }
