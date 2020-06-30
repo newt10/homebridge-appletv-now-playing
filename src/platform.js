@@ -12,7 +12,7 @@ class Platform {
         this.updateAccessories = this.updateAccessories.bind(this);
         this.configureAccessory = this.configureAccessory.bind(this);
         this.removeAccessory = this.removeAccessory.bind(this);
-        this.cleanupAccessory = this.cleanupAccessory.bind(this);
+        this.cleanupAccessories = this.cleanupAccessories.bind(this);
         this.loadDevice = this.loadDevice.bind(this);
         this.onApiDidFinishLaunching = this.onApiDidFinishLaunching.bind(this);
 
@@ -74,26 +74,59 @@ class Platform {
         this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
     };
 
-    cleanupAccessory(accessory) {
-        let foundAccessory = this.config.devices.filter((deviceConfiguration) => {
-            let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-            return accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === SwitchAccessory.Type;
+    cleanupAccessories() {
+        let devices = this.config.devices.map(device =>{
+             device.credentials = appletv.parseCredentials(device.credentials);             
+             return device;
         });
+        
+        for(let accessoryIndex = 0; accessoryIndex < this.accessories.length; accessoryIndex ++) {
+            let accessory = this.accessories[accessoryIndex];
+            let accessoryFound = false;
 
-        if (!foundAccessory) {
-            this.debug(`Removing orphaned ${SwitchAccessory.Type} accessory [${accessory.uid}].`);
-            this.unregisterAccessories([accessory]);
+            for(let deviceIndex = 0; deviceIndex < devices.length; deviceIndex ++) {
+                let device = devices[deviceIndex];
+
+                if(accessory.context.uid === device.credentials.uniqueIdentifier) {
+                    accessoryFound = true;
+
+                    if(!device.showTVAccessory && accessory.context.type === TelevisionAccessory.Type) {
+                        this.debug(`Removing orphaned ${accessory.Type} accessory [${accessory.uid}].`);
+                        this.unregisterAccessories([accessory]);
+                    }
+                }    
+            }
+
+            if(!accessoryFound) {
+                this.debug(`Removing orphaned ${accessory.Type} accessory [${accessory.uid}].`);
+                this.unregisterAccessories([accessory]);
+            }
         }
 
-        foundAccessory = this.config.devices.filter((deviceConfiguration) => {
-            let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-            return deviceConfiguration.showTVAccessory && accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === TelevisionAccessory.Type;
-        });
+        // let foundAccessory = this.config.devices.filter((deviceConfiguration) => {
+        //     let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
 
-        if (!foundAccessory) {
-            this.debug(`Removing orphaned ${TelevisionAccessory.Type} accessory [${accessory.uid}].`);
-            this.unregisterAccessories([accessory]);
-        }
+        //     if(accessory.context.uid === credentials.uniqueIdentifier) {
+
+        //     }
+
+        //     return accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === SwitchAccessory.Type;
+        // });
+
+        // if (!foundAccessory) {
+        //     this.debug(`Removing orphaned ${SwitchAccessory.Type} accessory [${accessory.uid}].`);
+        //     this.unregisterAccessories([accessory]);
+        // }
+
+        // foundAccessory = this.config.devices.filter((deviceConfiguration) => {
+        //     let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
+        //     return deviceConfiguration.showTVAccessory && accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === TelevisionAccessory.Type;
+        // });
+
+        // if (!foundAccessory) {
+        //     this.debug(`Removing orphaned ${TelevisionAccessory.Type} accessory [${accessory.uid}].`);
+        //     this.unregisterAccessories([accessory]);
+        // }
     };
 
     async loadDevice(deviceConfiguration) {
@@ -127,7 +160,7 @@ class Platform {
 
         this.debug("Cleaning up orphaned accessories...");
 
-        this.accessories.map(this.cleanupAccessory);
+        this.cleanupAccessories();
 
         this.debug("Loading configured Apple TVs...");
 
