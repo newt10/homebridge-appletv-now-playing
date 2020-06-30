@@ -33,6 +33,7 @@ class Accessory {
             this.accessory = new this.platform.api.platformAccessory(this.config.name, accessoryUid);
             this.accessory.displayName = this.config.name;
             this.accessory.context.uid = this.device.uid;
+            this.accessory.context.type = this.type;
 
             this.platform.registerAccessories([this.accessory]);
         } else {
@@ -40,6 +41,7 @@ class Accessory {
 
             this.accessory.displayName = this.config.name;
             this.accessory.name = this.config.name;
+            this.accessory.context.type = this.type;
 
             this.platform.updateAccessories([this.accessory]);
         }
@@ -57,19 +59,19 @@ class Accessory {
 
     onDeviceInfo(message) {
         this.power = message.payload.logicalDeviceCount == 1;
-
-        this.services && this.services.map(service => service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power));
+        this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
+        this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
     }
 
-    async onPower(value, next, service) {
+    async onPower(value, next) {
         clearTimeout(this.powerTimer);
 
-        this.platform.debug(`turning ${service.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
+        this.platform.debug(`turning ${this.service.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
 
-        if (value && !this.power) {
+        if (!value && this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
             await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
-        } else if (!value && this.power) {
+        } else if (value && !this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
         }
 
