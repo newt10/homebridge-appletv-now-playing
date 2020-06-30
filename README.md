@@ -18,7 +18,7 @@ The TV Accessory is an _experimental_ feature, so please use it **expecting thin
 
 * The TV Accessory does not show up in the [Home+ 4](https://apps.apple.com/us/app/home-4/id995994352) or [Eve for Homekit](https://apps.apple.com/us/app/eve-for-homekit/id917695792) apps and thefore cannot be used in more complex automations. The only option for now is to create scenes with the desired state in the native Home app and use those scenes in the other apps.
 * Apps are launched by mimicking button presses to highlight the app at the index specified in the config. It seems to be working fairly well and is a good substitute for when / if true application launching is available.
-* I am unable to get the current application on the fly, so changing the application outside of this accessory will not reflect in the accessory.
+* I am unable to get the current application on the fly unless the now playing information changes, so changing the application outside of this accessory will not always reflect in the accessory.
 
 ## Configration
 
@@ -65,7 +65,7 @@ Configuration can be done using [Homebridge Config UI X](https://github.com/oznu
 
 In order to retrieve credentials for your Apple TV, please follow these step
 
-1. Execute the cli application bundled with this package from the package directory
+1. Execute the cli application bundled with this package from the package directory (this would most likely be _/homebridge/node_modules/homebridge-appletv-now-playing_)
 ```
 /path/to/homebridge-appletv-now-playing $ node .\bin\cli.js
 ```
