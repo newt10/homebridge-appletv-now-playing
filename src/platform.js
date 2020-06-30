@@ -83,11 +83,12 @@ class Platform {
             let accessory = this.accessories[accessoryIndex];
             let accessoryFound = false;
 
-            this.debug(accessory);
-            this.debug(device);
+            this.debug(accessory.context);
 
             for(let deviceIndex = 0; deviceIndex < devices.length; deviceIndex ++) {
                 let device = devices[deviceIndex];
+
+                this.debug(device);
 
                 if(accessory.context.uid === device.parsedCredentials.uniqueIdentifier) {
                     accessoryFound = true;
