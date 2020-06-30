@@ -167,7 +167,7 @@ class TelevisionAccessory extends Accessory {
 
                 next(null);
             }, 1000);
-        }, 1000);
+        }, 2000);
     }
 
     async getInput(next) {
