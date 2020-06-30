@@ -17,6 +17,8 @@ class Accessory {
         this.characteristics = require("./characteristics")(platform.api);
 
         this.configureAccessory();
+
+        this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceInfo), 5000);
     }
 
     configureAccessory() {
@@ -45,18 +47,18 @@ class Accessory {
         this.platform.log(`${this.type} accessory (${this.device.name} [${this.device.uid}]) ready.`);
     };
 
-    onSupportedCommands(message, service) {
+    onSupportedCommands(message) {
         if (!!message) {
             if (!message.length) {
-                service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
+                this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
             }
         }
     };
 
-    onDeviceInfo(message, service) {
+    onDeviceInfo(message) {
         this.power = message.payload.logicalDeviceCount == 1;
 
-        service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
+        this.services && this.services.map(service => service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power));
     }
 
     async onPower(value, next, service) {
