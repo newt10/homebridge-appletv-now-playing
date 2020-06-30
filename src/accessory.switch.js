@@ -63,12 +63,12 @@ class SwitchAccessory extends Accessory {
             !this.switchService.getCharacteristic(this.characteristics.Duration) && this.switchService.addCharacteristic(this.characteristics.Duration);
             !this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.Active) && this.switchService.addCharacteristic(this.platform.api.hap.Characteristic.Active);
 
-            this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", super.onPower);
+            this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", super.onPower.bind(this));
 
             this.device.on("nowPlaying", this.onNowPlaying);
-            this.device.on("supportedCommands", message => super.onSupportedCommands(message, this.switchService));
+            this.device.on("supportedCommands", message => super.onSupportedCommands(message, this.switchService).bind(this));
 
-            super.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(message => super.onDeviceInfo(message, this.switchService)), 5000);
+            super.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(message => super.onDeviceInfo(message, this.switchService).bind(this)), 5000);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {

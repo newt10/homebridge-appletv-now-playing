@@ -58,13 +58,13 @@ class TelevisionAccessory extends Accessory {
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, this.config.name)
                 .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, this.config.name);
 
-            this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("set", super.onPower);
+            this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("set", super.onPower.bind(this));
             this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("set", this.setInput);
 
             this.device.on("nowPlaying", this.onNowPlaying);
-            this.device.on("supportedCommands", (message) => super.onSupportedCommands(message, this.switchService));
+            this.device.on("supportedCommands", (message) => super.onSupportedCommands(message, this.switchService).bind(this));
 
-            super.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then((message) => super.onDeviceInfo(message, this.tvService)), 5000);
+            super.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then((message) => super.onDeviceInfo(message, this.tvService).bind(this)), 5000);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
