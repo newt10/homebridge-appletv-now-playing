@@ -127,14 +127,14 @@ class Platform {
     };
 
     onApiDidFinishLaunching() {
+        this.debug("Cleaning up orphaned accessories...");
+
+        this.cleanupAccessories();
+
         if (!this.config.devices) {
             this.debug("No Apple TV devices have been configured.");
             return;
         }
-
-        this.debug("Cleaning up orphaned accessories...");
-
-        this.cleanupAccessories();
 
         this.debug("Loading configured Apple TVs...");
 
