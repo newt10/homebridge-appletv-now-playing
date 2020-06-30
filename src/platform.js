@@ -94,6 +94,10 @@ class Platform {
             this.debug(`Removing orphaned ${TelevisionAccessory.Type} accessory [${accessory.uid}].`);
 
             this.unregisterAccessories([accessory]);
+        } else if(!deviceConfiguration.showTvAccessory) {
+            this.debug(`Removing ${TelevisionAccessory.Type} accessory [${accessory.uid}] due to confirguration change.`);
+
+            this.unregisterAccessories([accessory]);
         }
     };
 
