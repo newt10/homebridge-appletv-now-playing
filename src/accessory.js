@@ -68,10 +68,10 @@ class Accessory {
 
         this.platform.debug(`turning ${this.service.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
 
-        if (value && !this.power) {
+        if (!value && this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
             await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
-        } else if (!value && this.power) {
+        } else if (value && !this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
         }
 
