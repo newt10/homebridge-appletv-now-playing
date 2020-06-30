@@ -188,7 +188,7 @@ class TelevisionAccessory extends Accessory {
         }
 
         this.tvService
-            .getCharacteristic(this.platform.api.hap.Characteristics.CurrentMediaState)
+            .getCharacteristic(this.platform.api.hap.Characteristic.CurrentMediaState)
             .updateValue(
                 message && message.playbackState
                     ? message.playbackState === "playing"
