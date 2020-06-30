@@ -66,7 +66,7 @@ class TelevisionAccessory extends Accessory {
             this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("set", this.onPower);
             this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier)
                 .on("set", this.setInput);
-                //.on("get", this.setInput);
+                .on("get", this.getInput);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
@@ -173,7 +173,7 @@ class TelevisionAccessory extends Accessory {
     }
 
     async getInput(next) {
-        //this.input && next(null, this.input.identifier);
+        this.input && next(null, this.input.identifier);
     }
 
     async onPower(value, next) {
