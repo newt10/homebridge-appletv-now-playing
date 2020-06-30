@@ -148,6 +148,7 @@ class TelevisionAccessory extends Accessory {
         this.platform.debug(`switching to ${this.type} input ${value} for accessory (${this.device.name} [${this.device.uid}]).`);
 
         this.input = this.config.inputs[value];
+        this.input.identifier = value;
 
         let column = this.input.index % 5;
         let row = (this.input.index - column) / 5;
@@ -168,7 +169,7 @@ class TelevisionAccessory extends Accessory {
 
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
 
-                next(null);
+                next(null, value);
             }, 1000);
         }, 2000);
     }
@@ -177,7 +178,7 @@ class TelevisionAccessory extends Accessory {
         if (this.input) {
             next(null, this.input.identifier);
         } else {
-            next(null, null);
+            next(null, 0);
         }
     }
 
