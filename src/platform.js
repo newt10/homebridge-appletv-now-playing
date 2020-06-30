@@ -89,15 +89,17 @@ class Platform {
                 if(accessory.context.uid === device.parsedCredentials.uniqueIdentifier) {
                     accessoryFound = true;
 
+                    this.debug(device);
+
                     if(!device.showTVAccessory && accessory.context.type === TelevisionAccessory.Type) {
-                        this.debug(`Removing orphaned ${accessory.Type} accessory [${accessory.uid}].`);
+                        this.debug(`Removing orphaned ${accessory.context.type} accessory [${accessory.context.uid}].`);
                         this.unregisterAccessories([accessory]);
                     }
                 }    
             }
 
             if(!accessoryFound) {
-                this.debug(`Removing orphaned ${accessory.Type} accessory [${accessory.uid}].`);
+                this.debug(`Removing orphaned ${accessory.context.type} accessory [${accessory.context.uid}].`);
                 this.unregisterAccessories([accessory]);
             }
         }
