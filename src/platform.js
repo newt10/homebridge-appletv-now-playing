@@ -83,6 +83,9 @@ class Platform {
             let accessory = this.accessories[accessoryIndex];
             let accessoryFound = false;
 
+            this.debug(accessory);
+            this.debug(device);
+
             for(let deviceIndex = 0; deviceIndex < devices.length; deviceIndex ++) {
                 let device = devices[deviceIndex];
 
@@ -90,7 +93,6 @@ class Platform {
                     accessoryFound = true;
 
                     if(device.showTVAccessory === false && accessory.context.type === TelevisionAccessory.Type) {
-                        this.debug(device.showTVAccessory);
                         this.debug(`Removing orphaned ${accessory.context.type} accessory [${accessory.context.uid}].`);
                         this.unregisterAccessories([accessory]);
                     }
