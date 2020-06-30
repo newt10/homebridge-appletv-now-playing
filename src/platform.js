@@ -76,7 +76,7 @@ class Platform {
 
     cleanupAccessories() {
         let devices = this.config.devices.map(device =>{
-             device.credentials = appletv.parseCredentials(device.credentials);             
+             device.parsedCredentials = appletv.parseCredentials(device.credentials);             
              return device;
         });
         
@@ -87,7 +87,7 @@ class Platform {
             for(let deviceIndex = 0; deviceIndex < devices.length; deviceIndex ++) {
                 let device = devices[deviceIndex];
 
-                if(accessory.context.uid === device.credentials.uniqueIdentifier) {
+                if(accessory.context.uid === device.parsedCredentials.uniqueIdentifier) {
                     accessoryFound = true;
 
                     if(!device.showTVAccessory && accessory.context.type === TelevisionAccessory.Type) {
