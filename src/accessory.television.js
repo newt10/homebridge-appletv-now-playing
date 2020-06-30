@@ -149,8 +149,6 @@ class TelevisionAccessory extends Accessory {
 
         if(this.input && this.input.identifier == value) return;
 
-        this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(value);
-
         this.input = this.config.inputs[value];
         this.input.identifier = value;
 
@@ -176,6 +174,8 @@ class TelevisionAccessory extends Accessory {
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
 
                 next(null, value);
+
+                this.tvService.updateCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier, value);
             }, 1000);
         }, 2000);
     }
