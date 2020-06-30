@@ -146,7 +146,7 @@ class TelevisionAccessory extends Accessory {
 
     async setInput(value, next) {
 
-        if(this.input.identifier == value) return;
+        if(this.input && this.input.identifier == value) return;
 
         this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(value);
 
