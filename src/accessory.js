@@ -8,6 +8,7 @@ class Accessory {
         this.device = device;
         this.power = false;
         this.powerTimer = null;
+        this.deviceInfoTimer = null;
         this.characteristics = require("./characteristics")(platform.api);
 
         this.configureAccessory();
@@ -38,6 +39,38 @@ class Accessory {
 
         this.platform.log(`${this.type} accessory (${this.device.name} [${this.device.uid}]) ready.`);
     };
+
+    onSupportedCommands(message, service) {
+        if (!!message) {
+            if (!message.length) {
+                service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
+            }
+        }
+    };
+
+    onDeviceInfo(message, service) {
+        this.power = message.payload.logicalDeviceCount == 1;
+
+        service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
+    }
+
+    async onPower(value, next) {
+        clearTimeout(this.powerTimer);
+
+        this.platform.debug(`turning ${this.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
+
+        if (value && !this.power) {
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+        } else if (!value && this.power) {
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+        }
+
+        this.power = value;
+        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 10000);
+
+        next(null);
+    }
 }
 
 module.exports = Accessory;

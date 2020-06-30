@@ -19,8 +19,6 @@ class SwitchAccessory extends Accessory {
     configureServices() {
         this.configureAccessoryInformationService();
         this.configureSwitchService();
-
-        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 5000);
     };
 
     configureAccessoryInformationService() {
@@ -68,48 +66,17 @@ class SwitchAccessory extends Accessory {
             !this.switchService.getCharacteristic(this.characteristics.Duration) && this.switchService.addCharacteristic(this.characteristics.Duration);
             !this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.Active) && this.switchService.addCharacteristic(this.platform.api.hap.Characteristic.Active);
 
-            this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", this.onPower);
+            this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", super.onPower);
 
             this.device.on("nowPlaying", this.onNowPlaying);
-            this.device.on("supportedCommands", this.onSupportedCommands);
+            this.device.on("supportedCommands", message => super.onSupportedCommands(message, this.switchService));
+
+            super.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(message => super.onDeviceInfo(message, this.switchService)), 5000);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
             this.platform.debug(error);
-        }
-    };
-
-    async onPower(value, next) {
-        clearTimeout(this.powerTimer);
-
-        this.platform.debug(`turning ${this.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
-
-        if (value && !this.power) {
-            await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
-            await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
-        } else if (!value && this.power) {
-            await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
-        }
-
-        this.power = value;
-        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 10000);
-
-        next();
-    };
-
-    onDeviceInfo(message) {
-        this.power = message.payload.logicalDeviceCount == 1;
-        this.switchService && this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
-
-        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 5000);
-    };
-
-    onSupportedCommands(message) {
-        if (!!message) {
-            if (!message.length) {
-                this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
-            }
         }
     };
 

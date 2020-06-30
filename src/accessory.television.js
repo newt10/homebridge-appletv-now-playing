@@ -22,8 +22,6 @@ class TelevisionAccessory extends Accessory {
         this.configureAccessoryInformationService();
         this.configureTVService();
         this.configureInputServices();
-
-        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 5000);
     }
 
     configureAccessoryInformationService() {
@@ -63,11 +61,13 @@ class TelevisionAccessory extends Accessory {
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, this.config.name)
                 .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, this.config.name);
 
-            this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("set", this.onPower);
-            this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("set", this.setInput).on("get", this.getInput);
+            this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("set", super.onPower);
+            this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("set", this.setInput);
 
-            this.device.on("supportedCommands", this.platform.debug);
-            this.device.on("playbackQueue", this.platform.debug);
+            this.device.on("nowPlaying", this.onNowPlaying);
+            this.device.on("supportedCommands", (message) => super.onSupportedCommands(message, this.switchService));
+
+            super.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then((message) => super.onDeviceInfo(message, this.tvService)), 5000);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
@@ -146,8 +146,7 @@ class TelevisionAccessory extends Accessory {
     }
 
     async setInput(value, next) {
-
-        if(this.input && this.input.identifier == value) return;
+        if (this.input && this.input.identifier == value) return;
 
         this.input = this.config.inputs[value];
         this.input.identifier = value;
@@ -174,54 +173,8 @@ class TelevisionAccessory extends Accessory {
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
 
                 next(null, value);
-
-                this.tvService.updateCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier, value);
             }, 1000);
         }, 2000);
-    }
-
-    async getInput(next) {
-        if (this.input) {
-            this.platform.debug(`setting active identifier for ${this.type} service to input ${this.input.name} [${this.input.identifier}] for accessory (${this.device.name} [${this.device.uid}]).`);
-            next(null, this.input.identifier);
-        } else {
-            this.platform.debug(`unable to set active identifier for ${this.type} service for accessory (${this.device.name} [${this.device.uid}]).`);
-            next(null, 0);
-        }
-    }
-
-    async onPower(value, next) {
-        clearTimeout(this.powerTimer);
-
-        this.platform.debug(`turning ${this.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
-
-        if (value && !this.power) {
-            await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
-            await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
-        } else if (!value && this.power) {
-            await this.device.sendKeyPressAndRelease(1, 0x83);
-            await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
-        }
-
-        this.power = value;
-        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 10000);
-
-        next(null);
-    }
-
-    onDeviceInfo(message) {
-        this.power = message.payload.logicalDeviceCount == 1;
-        this.tvService && this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
-
-        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 5000);
-    }
-
-    onSupportedCommands(message) {
-        if (!!message) {
-            if (!message.length) {
-                this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
-            }
-        }
     }
 
     onNowPlaying(message) {
@@ -229,15 +182,25 @@ class TelevisionAccessory extends Accessory {
             message.playbackState = message.playbackState[0].toUpperCase() + message.playbackState.substring(1).toLowerCase();
         }
 
+        if (message && message.appBundleIdentifier && this.config.inputs) {
+            let input = this.config.inputs.filter(input => input.applicationId && input.applicationId === message.appBundleIdentifier);
+
+            if(input) {
+                this.input = input;
+                this.tvService.updateCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier, this.input.identifier);
+            }
+        }
+
         this.tvService
             .getCharacteristic(this.platform.api.hap.Characteristics.CurrentMediaState)
             .updateValue(
-                message &&
-                    (message.playbackState === "playing"
+                message && message.playbackState
+                    ? message.playbackState === "playing"
                         ? this.platform.api.hap.Characteristic.CurrentMediaState.PLAY
                         : message.playbackState === "paused"
                         ? this.platform.api.hap.Characteristic.CurrentMediaState.PAUSE
-                        : this.platform.api.hap.Characteristic.CurrentMediaState.STOP)
+                        : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
+                    : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
             );
     }
 }
