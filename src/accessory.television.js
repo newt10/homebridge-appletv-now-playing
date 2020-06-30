@@ -10,9 +10,6 @@ class TelevisionAccessory extends Accessory {
         this.configureTVService = this.configureTVService.bind(this);
         this.configureInputServices = this.configureInputServices.bind(this);
         this.setInput = this.setInput.bind(this);
-        this.onPower = this.onPower.bind(this);
-        this.onDeviceInfo = this.onDeviceInfo.bind(this);
-        this.onSupportedCommands = this.onSupportedCommands.bind(this);
         this.onNowPlaying = this.onNowPlaying.bind(this);
 
         this.configureServices();

@@ -1,6 +1,9 @@
 class Accessory {
     constructor(type, platform, config, device) {
         this.configureAccessory = this.configureAccessory.bind(this);
+        this.onPower = this.onPower.bind(this);
+        this.onDeviceInfo = this.onDeviceInfo.bind(this);
+        this.onSupportedCommands = this.onSupportedCommands.bind(this);
 
         this.type = type;
         this.platform = platform;

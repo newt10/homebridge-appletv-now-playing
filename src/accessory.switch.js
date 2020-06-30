@@ -8,9 +8,6 @@ class SwitchAccessory extends Accessory {
         this.configureServices = this.configureServices.bind(this);
         this.configureAccessoryInformationService = this.configureAccessoryInformationService.bind(this);
         this.configureSwitchService = this.configureSwitchService.bind(this);
-        this.onPower = this.onPower.bind(this);
-        this.onDeviceInfo = this.onDeviceInfo.bind(this);
-        this.onSupportedCommands = this.onSupportedCommands.bind(this);
         this.onNowPlaying = this.onNowPlaying.bind(this);
 
         this.configureServices();
