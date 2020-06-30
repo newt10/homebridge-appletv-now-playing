@@ -64,7 +64,6 @@ class Platform {
             this.accessories.push(accessory);
 
             this.debug(`Loaded cached accessory width id ${accessory.UUID}`);
-            this.debug(accessory);
         }
     };
 
@@ -77,7 +76,7 @@ class Platform {
     cleanupAccessory(accessory) {
         let foundAccessory = this.config.devices.filter((deviceConfiguration) => {
             let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-            return accessory.UUID === `${credentials.uniqueIdentifier}_apple_tv_${SwitchAccessory.Type}`;
+            return accessory.UUID === this.platform.api.hap.uuid.generate(`${credentials.uniqueIdentifier}_apple_tv_${SwitchAccessory.Type}`);
         });
 
         if (!foundAccessory) {
@@ -88,7 +87,7 @@ class Platform {
 
         foundAccessory = this.config.devices.filter((deviceConfiguration) => {
             let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-            return deviceConfiguration.showTVAccessory && accessory.UUID === `${credentials.uniqueIdentifier}_apple_tv_${TelevisionAccessory.Type}`;
+            return deviceConfiguration.showTVAccessory && accessory.UUID === this.platform.api.hap.uuid.generate(`${credentials.uniqueIdentifier}_apple_tv_${TelevisionAccessory.Type}`);
         });
 
         if (!foundAccessory) {
