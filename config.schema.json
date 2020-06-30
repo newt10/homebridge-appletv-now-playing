@@ -1,0 +1,63 @@
+{
+    "pluginAlias": "AppleTvNowPlayingPlatform",
+    "pluginType": "platform",
+    "singular": true,
+    "schema": {
+        "type": "object",
+        "properties": {
+            "debug": {
+                "title": "Debug",
+                "description": "Log some helpful debug information intended for troubleshooting.",
+                "type": "boolean"
+            },
+            "devices": {
+                "type": "array",
+                "title": "Devices",
+                "items": {
+                    "title": "Device",
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "title": "Name",
+                            "description": "The name you would like to expose for the device",
+                            "type": "string",
+                            "required": true
+                        },
+                        "credentials": {
+                            "title": "Credentials",
+                            "description": "The credentials needed to authorise connection to the device",
+                            "type": "string",
+                            "required": true
+                        },
+                        "showTvAccessory": {
+                            "title": "Show TV Accessory (Work in progress)",
+                            "description": "Expose a TV Accessory for this device",
+                            "type": "boolean"
+                        },
+                        "inputs": {
+                            "type": "array",
+                            "title": "Applications",
+                            "items": {
+                                "title": "Application",
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "title": "Application Name",
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "index": {
+                                        "title": "Application Index",
+                                        "description": "In the application grid on your apple tv, at which position is your app?",
+                                        "type": "integer",
+                                        "required": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

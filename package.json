@@ -1,0 +1,38 @@
+{
+  "name": "homebridge-appletv-now-playing",
+  "version": "0.3.1",
+  "description": "A homebridge that exposes Apple TV devices to Homekit, along with it's current Power State, Playback State and Now Playing Information.",
+  "license": "MIT",
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "homebridge-apple-tv",
+    "homebridge-apple-tv-now-playing",
+    "node-appletv"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kurtwarwick-new/homebridge-appletv-now-playing.git"
+  },
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "node-appletv-x": "^1.0.17",
+    "readline-promise": "^1.0.4"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/kurtwarwick-new/homebridge-appletv-now-playing/issues"
+  },
+  "homepage": "https://github.com/kurtwarwick-new/homebridge-appletv-now-playing#readme",
+  "main": "index.js",
+  "bin": {
+    "appleTvNowPlaying": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kurt Warwick"
+}
