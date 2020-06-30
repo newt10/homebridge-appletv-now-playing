@@ -60,6 +60,7 @@ class Accessory {
     onDeviceInfo(message) {
         this.power = message.payload.logicalDeviceCount == 1;
         this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
+        this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
     }
 
     async onPower(value, next) {
