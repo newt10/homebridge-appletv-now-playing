@@ -74,10 +74,10 @@ class Platform {
     };
 
     cleanupAccessories() {
-        let devices = this.config.devices.map(device =>{
+        let devices = this.config.devices ? this.config.devices.map(device =>{
              device.parsedCredentials = appletv.parseCredentials(device.credentials);             
              return device;
-        });
+        }) : [];
         
         for(let accessoryIndex = 0; accessoryIndex < this.accessories.length; accessoryIndex ++) {
             let accessory = this.accessories[accessoryIndex];
