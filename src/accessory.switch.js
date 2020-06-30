@@ -53,6 +53,8 @@ class SwitchAccessory extends Accessory {
                     `${this.config.name} Switch`,
                     `${this.accessory.context.uid}_switch`
                 );
+
+                this.platform.debug(`configuring ${this.type} service for accessory (${this.device.name} [${this.device.uid}]).`);
             }
 
             !this.switchService.getCharacteristic(this.characteristics.State) && this.switchService.addCharacteristic(this.characteristics.State);
@@ -71,9 +73,9 @@ class SwitchAccessory extends Accessory {
             this.device.on("nowPlaying", this.onNowPlaying);
             this.device.on("supportedCommands", this.onSupportedCommands);
 
-            this.platform.debug(`switch service for ${this.type} accessory (${this.device.name} [${this.device.uid}]) configured.`);
+            this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
-            this.platform.debug(`switch service for ${this.type} accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
+            this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
             this.platform.debug(error);
         }
     };
@@ -81,7 +83,7 @@ class SwitchAccessory extends Accessory {
     async onPower(value, next) {
         clearTimeout(this.powerTimer);
 
-        this.platform.debug(`turning ${this.type} accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
+        this.platform.debug(`turning ${this.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
 
         if (value && !this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);

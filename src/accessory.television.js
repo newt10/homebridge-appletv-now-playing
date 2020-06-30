@@ -45,7 +45,7 @@ class TelevisionAccessory extends Accessory {
     }
 
     configureTVService() {
-        this.platform.debug(`configuring television service for ${this.type} accessory (${this.device.name} [${this.device.uid}]).`);
+        this.platform.debug(`configuring ${this.type} service for accessory (${this.device.name} [${this.device.uid}]).`);
 
         try {
             this.tvService = this.accessory.getService(this.platform.api.hap.Service.Television);
@@ -53,7 +53,7 @@ class TelevisionAccessory extends Accessory {
             if (!this.tvService) {
                 this.tvService = this.accessory.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`);
 
-                this.platform.debug(`television service ${input.name} [${index}] for ${this.type} added to accessory (${this.device.name} [${this.device.uid}]).`);
+                this.platform.debug(`television service added to accessory (${this.device.name} [${this.device.uid}]).`);
             }
 
             this.tvService
@@ -68,15 +68,15 @@ class TelevisionAccessory extends Accessory {
                 .on("set", this.setInput)
                 .on("get", this.setInput);
 
-            this.platform.debug(`television service for ${this.type} accessory (${this.device.name} [${this.device.uid}]) configured.`);
+            this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
-            this.platform.log(`television service for ${this.type} accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
+            this.platform.log(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
             this.platform.log(error);
         }
     }
 
     configureInputServices() {
-        this.platform.debug(`configuring input service(s) for ${this.type} accessory (${this.device.name} [${this.device.uid}]).`);
+        this.platform.debug(`configuring ${this.type} input service(s) for accessory (${this.device.name} [${this.device.uid}]).`);
 
         try {
             if (this.config.inputs && this.config.inputs.length) {
@@ -87,7 +87,7 @@ class TelevisionAccessory extends Accessory {
                         let inputService = accessory.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.accessory.context.uid}_input_${index}`);
 
                         if (inputService) {
-                            this.platform.debug(`removing orphaned input service for ${this.type} accessory (${this.device.name} [${this.device.uid}]).`);
+                            this.platform.debug(`removing orphaned ${this.type} input service for accessory (${this.device.name} [${this.device.uid}]).`);
                             this.accessory.removeService(inputService);
                         }
                     }
@@ -98,7 +98,7 @@ class TelevisionAccessory extends Accessory {
 
                     input.identifier = index;
 
-                    this.platform.debug(`configuring input service ${input.name} [${index}] for ${this.type} accessory (${this.device.name} [${this.device.uid}]).`);
+                    this.platform.debug(`configuring ${this.type} input service ${input.name} [${index}] for accessory (${this.device.name} [${this.device.uid}]).`);
 
                     let inputService = this.accessory.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.accessory.context.uid}_input_${index}`);
 
@@ -109,7 +109,7 @@ class TelevisionAccessory extends Accessory {
                             `${this.accessory.context.uid}_input_${index}`
                         );
 
-                        this.platform.debug(`input service ${input.name} [${index}] for ${this.type} added to accessory (${this.device.name} [${this.device.uid}]).`);
+                        this.platform.debug(`${this.type} input service ${input.name} [${index}] for added to accessory (${this.device.name} [${this.device.uid}]).`);
                     }
 
                     inputService
@@ -121,7 +121,7 @@ class TelevisionAccessory extends Accessory {
 
                     this.tvService.addLinkedService(inputService);
 
-                    this.platform.debug(`input service ${input.name} [${index}] for ${this.type} accessory (${this.device.name} [${this.device.uid}]) configured.`);
+                    this.platform.debug(`${this.type} input service ${input.name} [${index}] for accessory (${this.device.name} [${this.device.uid}]) configured.`);
                 }
 
                 this.accessory.context.inputs = this.config.inputs;
@@ -130,7 +130,7 @@ class TelevisionAccessory extends Accessory {
                     let inputService = this.accessory.getService(this.platform.api.hap.Service.InputSource);
 
                     if (inputService) {
-                        this.platform.debug(`removing orphaned input service for ${this.type} accessory (${this.device.name} [${this.device.uid}]).`);
+                        this.platform.debug(`removing orphaned ${this.type} input service for accessory (${this.device.name} [${this.device.uid}]).`);
                         this.accessory.removeService(this.platform.api.hap.Service.InputSource);
                     }
                 }
@@ -138,13 +138,13 @@ class TelevisionAccessory extends Accessory {
                 this.accessory.context.inputs = [];
             }
         } catch (error) {
-            this.platform.log(`input service(s) for ${this.type} accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
+            this.platform.log(`${this.type} input service(s) for accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
             this.platform.log(error);
         }
     }
 
     async setInput(value, next) {
-        this.platform.debug(`opening app ${value} for ${this.type}  accessory (${this.device.name} [${this.device.uid}]).`);
+        this.platform.debug(`switching to ${this.type} input ${value} for accessory (${this.device.name} [${this.device.uid}]).`);
 
         this.input = this.config.inputs[value];
 
@@ -179,7 +179,7 @@ class TelevisionAccessory extends Accessory {
     async onPower(value, next) {
         clearTimeout(this.powerTimer);
 
-        this.platform.debug(`turning ${this.type} accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
+        this.platform.debug(`turning ${this.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
 
         if (value && !this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
