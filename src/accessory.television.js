@@ -66,6 +66,9 @@ class TelevisionAccessory extends Accessory {
             this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("set", this.onPower);
             this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("set", this.setInput).on("get", this.getInput);
 
+            this.device.on("supportedCommands", this.platform.debug);
+            this.device.on("playbackQueue", this.platform.debug);
+
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
             this.platform.log(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) could not be configured.`);
@@ -198,8 +201,6 @@ class TelevisionAccessory extends Accessory {
     }
 
     onDeviceInfo(message) {
-        this.platform.debug(message);
-
         this.power = message.payload.logicalDeviceCount == 1;
         this.tvService && this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
 
