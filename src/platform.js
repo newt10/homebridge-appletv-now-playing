@@ -27,12 +27,20 @@ class Platform {
 
     debug(message) {
         if (this.config && this.config.debug) {
-            this.log(message.toLowerCase());
+            if(typeof mesage === "string") {
+                message = message.toLowerCase();
+            }
+
+            this.log(message);
         }
     };
 
     log(message) {
-        this.log(message.toLowerCase());
+        if(typeof mesage === "string") {
+            message = message.toLowerCase();
+        }
+
+        this.log(message);
     };
 
     registerAccessories(accessories) {
