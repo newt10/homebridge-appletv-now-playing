@@ -68,8 +68,6 @@ class TelevisionAccessory extends Accessory {
 
             this.device.on("supportedCommands", this.platform.debug);
             this.device.on("playbackQueue", this.platform.debug);
-            this.device.requestPlaybackQueueWithWait().then(this.platform.debug);
-            this.device.sendMessage("GetStateMessage", "GetStateMessage", {}, true).then(this.platform.debug);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
@@ -171,13 +169,15 @@ class TelevisionAccessory extends Accessory {
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
 
                 next(null);
+
+                this.device.requestPlaybackQueueWithWait().then(this.platform.debug);
             }, 1000);
         }, 2000);
     }
 
     async getInput(next) {
         if (this.input) {
-            next(null, this.input.name);
+            next(null, this.input.identifier);
         } else {
             next(null, null);
         }
