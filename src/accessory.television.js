@@ -198,6 +198,8 @@ class TelevisionAccessory extends Accessory {
     }
 
     onDeviceInfo(message) {
+        this.platform.debug(message);
+
         this.power = message.payload.logicalDeviceCount == 1;
         this.tvService && this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
 
