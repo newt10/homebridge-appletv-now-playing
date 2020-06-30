@@ -12,7 +12,7 @@ The media type is calculated by checking artist and album information. This char
 
 **Note:** The TV Accessory is an _experimental_ feature, so please use it expecting things to not work. 
 
-It launches apps by mimicking button presses to the location of the app on the home screen and selecting it. It seems to be working fairly well and is a good substitute for when / if true application launching is available. I am looking into how I might be able to get the currently launched application without the now playing info so that the input selection can be updated if it changes outside of the accessory.
+  It launches apps by mimicking button presses to the location of the app on the home screen and selecting it. It seems to be working fairly well and is a good substitute for when / if true application launching is available. I am looking into how I might be able to get the currently launched application without the now playing info so that the input selection can be updated if it changes outside of the accessory.
 
 ## Configration
 
