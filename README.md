@@ -16,7 +16,7 @@ The TV Accessory is an _experimental_ feature, so please use it **expecting thin
 
 #### Limitations
 
-* The TV Accessory do not show up in, and hence cannot be used to trigger automations in the [Home+ 4](https://apps.apple.com/us/app/home-4/id995994352) or [Eve for Homekit](https://apps.apple.com/us/app/eve-for-homekit/id917695792) apps.
+* The TV Accessory does not show up in the [Home+ 4](https://apps.apple.com/us/app/home-4/id995994352) or [Eve for Homekit](https://apps.apple.com/us/app/eve-for-homekit/id917695792) apps and thefore cannot be used in more complex automations.
 * Apps are launched by mimicking button presses to highlight the app at the index specified in the config. It seems to be working fairly well and is a good substitute for when / if true application launching is available.
 
 ## Configration
