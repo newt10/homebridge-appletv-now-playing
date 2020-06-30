@@ -68,6 +68,8 @@ class TelevisionAccessory extends Accessory {
 
             this.device.on("supportedCommands", this.platform.debug);
             this.device.on("playbackQueue", this.platform.debug);
+            this.device.requestPlaybackQueueWithWait().then(this.platform.debug);
+            this.device.sendMessage("GetStateMessage", "GetStateMessage", {}, true).then(this.platform.debug);
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
