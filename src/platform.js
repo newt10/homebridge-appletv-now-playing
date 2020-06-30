@@ -76,23 +76,21 @@ class Platform {
     cleanupAccessory(accessory) {
         let foundAccessory = this.config.devices.filter((deviceConfiguration) => {
             let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-            return accessory.UUID === this.api.hap.uuid.generate(`${credentials.uniqueIdentifier}_apple_tv_${SwitchAccessory.Type}`);
+            return accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === SwitchAccessory.Type;
         });
 
         if (!foundAccessory) {
             this.debug(`Removing orphaned ${SwitchAccessory.Type} accessory [${accessory.uid}].`);
-
             this.unregisterAccessories([accessory]);
         }
 
         foundAccessory = this.config.devices.filter((deviceConfiguration) => {
             let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
-            return deviceConfiguration.showTVAccessory && accessory.UUID === this.api.hap.uuid.generate(`${credentials.uniqueIdentifier}_apple_tv_${TelevisionAccessory.Type}`);
+            return deviceConfiguration.showTVAccessory && accessory.context.uid === credentials.uniqueIdentifier && accessory.context.type === TelevisionAccessory.Type;
         });
 
         if (!foundAccessory) {
             this.debug(`Removing orphaned ${TelevisionAccessory.Type} accessory [${accessory.uid}].`);
-
             this.unregisterAccessories([accessory]);
         }
     };

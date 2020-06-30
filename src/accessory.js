@@ -33,6 +33,7 @@ class Accessory {
             this.accessory = new this.platform.api.platformAccessory(this.config.name, accessoryUid);
             this.accessory.displayName = this.config.name;
             this.accessory.context.uid = this.device.uid;
+            this.accessory.context.type = this.type;
 
             this.platform.registerAccessories([this.accessory]);
         } else {
@@ -40,6 +41,7 @@ class Accessory {
 
             this.accessory.displayName = this.config.name;
             this.accessory.name = this.config.name;
+            this.accessory.context.type = this.type;
 
             this.platform.updateAccessories([this.accessory]);
         }
