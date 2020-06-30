@@ -116,7 +116,8 @@ class TelevisionAccessory extends Accessory {
                     inputService
                         .setCharacteristic(this.platform.api.hap.Characteristic.Identifier, index)
                         .setCharacteristic(this.platform.api.hap.Characteristic.IsConfigured, this.platform.api.hap.Characteristic.IsConfigured.CONFIGURED)
-                        .setCharacteristic(this.platform.api.hap.Characteristic.InputSourceType, this.platform.api.hap.Characteristic.InputSourceType, "APPLICATION")
+                        .setCharacteristic(this.platform.api.hap.Characteristic.InputSourceType, this.platform.api.hap.Characteristic.InputSourceType.APPLICATION)
+                        .setCharacteristic(this.platform.api.hap.Characteristic.Name, input.name)
                         .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
                         .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
 
