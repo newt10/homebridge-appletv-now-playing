@@ -65,7 +65,10 @@ Configuration can be done using [Homebridge Config UI X](https://github.com/oznu
 
 In order to retrieve credentials for your Apple TV, please follow these step
 
-1. Execute the cli application bundled with this package from the package directory (this would most likely be _/homebridge/node_modules/homebridge-appletv-now-playing_)
+1. Execute the cli application bundled with this package from the package directory.
+
+    <small>You should be able to run ```npm root -g``` to find the NPN installation location, or if you are using the [Docker image from Oznu](https://github.com/oznu/docker-homebridge) it should be ```/homebridge/node_modules/homebridge-appletv-now-playing```</small>
+
 ```
 /path/to/homebridge-appletv-now-playing $ node .\bin\cli.js
 ```
