@@ -1,6 +1,6 @@
 {
   "name": "homebridge-appletv-now-playing",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "A homebridge that exposes Apple TV devices to Homekit, along with it's current Power State, Playback State and Now Playing Information.",
   "license": "MIT",
   "keywords": [
