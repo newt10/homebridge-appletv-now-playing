@@ -10,6 +10,7 @@ module.exports = class TempAccessory {
         this.configureSwitchService = this.configureSwitchService.bind(this);
         this.configureTelevisionsService = this.configureTelevisionsService.bind(this);
 
+        this.setRemote = this.setRemote.bind(this)
         this.setOn = this.setOn.bind(this);
         this.getOn = this.getOn.bind(this);
         this.setActive = this.setActive.bind(this);
@@ -85,6 +86,12 @@ module.exports = class TempAccessory {
 
         this.switchService = this.instance.getService(this.platform.api.hap.Service.Switch);
 
+        if(this.switchService) {
+            this.instance.removeService(this.switchService);
+        }
+
+        return;
+
         if (!this.switchService) {
             this.debug(`creating switch service.`);
 
@@ -101,12 +108,6 @@ module.exports = class TempAccessory {
 
         this.televisionService = this.instance.getService(this.platform.api.hap.Service.Television);
 
-        if(this.televisionService) {
-            this.instance.removeService(this.televisionService);
-        }
-
-        return;
-
         if (!this.televisionService) {
             this.debug(`creating television service.`);
 
@@ -115,6 +116,7 @@ module.exports = class TempAccessory {
 
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getActive).on("set", this.setActive);
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.RemoteKey).on('set', this.setRemote);
 
         this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
         this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.SleepDiscoveryMode, this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
@@ -122,12 +124,16 @@ module.exports = class TempAccessory {
         this.log(`television service configured.`);
     }
 
+    setRemote(value, callback) {
+        this.debug(`setting on remote => ${!!value}`);
+    }
+
     setOn(value, callback) {
         this.debug(`setting on characteristic => ${!!value}`);
 
         this.on = value;
 
-        //this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on ? 1 : 0);
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on ? 1 : 0);
         this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
 
         callback(null);
