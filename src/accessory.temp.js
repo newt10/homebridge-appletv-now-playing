@@ -31,5 +31,7 @@ module.exports = class TempAccessory {
                 this.on = value;
                 callback(null);
             });
+
+        platform.registerAccessory(accessory);
     }
 };

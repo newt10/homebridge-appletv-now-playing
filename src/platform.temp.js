@@ -5,6 +5,7 @@ const TempAccessory = require("./accessory.temp");
 class Platform {
     constructor(log, config, api) {
         this.configureAccessory = this.configureAccessory.bind(this);
+        this.registerAccessory = this.registerAccessory.bind(this);
         this.onApiDidFinishLaunching = this.onApiDidFinishLaunching.bind(this);
 
         this.config = config;
@@ -15,6 +16,10 @@ class Platform {
 
         this.api.on("didFinishLaunching", this.onApiDidFinishLaunching);
     }
+
+    registerAccessory(accessory) {
+        this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+    };
 
     configureAccessory(accessory) {
         if (!accessory.context.device) {
