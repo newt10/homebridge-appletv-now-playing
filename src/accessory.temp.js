@@ -9,7 +9,7 @@ module.exports = class TempAccessory {
         this.configureServices = this.configureServices.bind(this);
         this.configureSwitchService = this.configureSwitchService.bind(this);
         this.configureTelevisionsService = this.configureTelevisionsService.bind(this);
-        this.configureInputServices = this.this.configureInputServices.bind(this);
+        this.configureInputServices = this.configureInputServices.bind(this);
 
         this.setRemote = this.setRemote.bind(this);
         this.setOn = this.setOn.bind(this);
