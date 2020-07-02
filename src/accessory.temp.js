@@ -86,12 +86,6 @@ module.exports = class TempAccessory {
 
         this.switchService = this.instance.getService(this.platform.api.hap.Service.Switch);
 
-        if(this.switchService) {
-            this.instance.removeService(this.switchService);
-        }
-
-        return;
-
         if (!this.switchService) {
             this.debug(`creating switch service.`);
 
@@ -151,7 +145,7 @@ module.exports = class TempAccessory {
         this.on = value;
 
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on);
-        //this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on ? 1 : 0);
+        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on ? 1 : 0);
 
         callback(null);
     }
@@ -159,7 +153,7 @@ module.exports = class TempAccessory {
     getActive(callback) {
         this.debug(`requesting active characteristic => ${this.on}`);
 
-        callback(null, this.on);
+        callback(null, this.on ? 1 : 0);
     }
 
     setActiveIdentifier(value, callback) {
