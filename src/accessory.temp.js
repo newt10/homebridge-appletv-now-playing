@@ -11,7 +11,7 @@ module.exports = class TempAccessory {
         this.configureTelevisionsService = this.configureTelevisionsService.bind(this);
         this.configureInputServices = this.this.configureInputServices.bind(this);
 
-        this.setRemote = this.setRemote.bind(this)
+        this.setRemote = this.setRemote.bind(this);
         this.setOn = this.setOn.bind(this);
         this.getOn = this.getOn.bind(this);
         this.setActive = this.setActive.bind(this);
@@ -111,10 +111,13 @@ module.exports = class TempAccessory {
 
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getActive).on("set", this.setActive);
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
-        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.RemoteKey).on('set', this.setRemote);
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.RemoteKey).on("set", this.setRemote);
 
         this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
-        this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.SleepDiscoveryMode, this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
+        this.televisionService.setCharacteristic(
+            this.platform.api.hap.Characteristic.SleepDiscoveryMode,
+            this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE
+        );
 
         this.configureInputServices();
 
@@ -124,13 +127,29 @@ module.exports = class TempAccessory {
     configureInputServices() {
         this.debug(`configuring input services.`);
 
-        lodash.each(this.config.inputs, input => {
-            let uuid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv_input_${input.name}`);
+        lodash.each(this.config.inputs, (input, index) => {
+            this.debug(`configuring input service for ${input.name}.`);
+
+            let uuid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv_input_${index}`);
             let inputService = this.instance.getServiceById(uuid);
 
-            if(!inputService) {
+            if (!inputService) {
+                this.debug(`creating input service for ${input.name}.`);
+
                 inputService = this.instance.addService(this.platform.api.hap.Service.InputSource, uuid);
             }
+
+            inputService
+                .setCharacteristic(this.platform.api.hap.Characteristic.Identifier, index)
+                .setCharacteristic(this.platform.api.hap.Characteristic.IsConfigured, this.platform.api.hap.Characteristic.IsConfigured.CONFIGURED)
+                .setCharacteristic(this.platform.api.hap.Characteristic.InputSourceType, this.platform.api.hap.Characteristic.InputSourceType.APPLICATION)
+                .setCharacteristic(this.platform.api.hap.Characteristic.Name, input.name)
+                .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
+                .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
+
+            this.televisionService.addLinkedService(inputService);
+
+            this.log(`input service for ${input.name} configured.`);
         });
 
         this.log(`input services configured.`);
