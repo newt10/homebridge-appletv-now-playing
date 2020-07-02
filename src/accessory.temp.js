@@ -77,7 +77,7 @@ module.exports = class TempAccessory {
         this.log(`accessory information service configured.`);
 
         this.configureTelevisionsService();
-        this.configureSwitchService();
+        //this.configureSwitchService();
     }
 
     configureSwitchService() {
@@ -136,10 +136,10 @@ module.exports = class TempAccessory {
     setActive(value, callback) {
         this.debug(`setting active characteristic => ${!!value}`);
 
-        this.on = !!value;
+        this.on = value;
 
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on);
-        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on ? 1 : 0);
+        //this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on ? 1 : 0);
 
         callback(null);
     }
@@ -147,7 +147,7 @@ module.exports = class TempAccessory {
     getActive(callback) {
         this.debug(`requesting active characteristic => ${this.on}`);
 
-        callback(null, this.on ? 1 : 0);
+        callback(null, this.on);
     }
 
     setActiveIdentifier(value, callback) {
