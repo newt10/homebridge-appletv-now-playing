@@ -110,9 +110,9 @@ module.exports = class TempAccessory {
     }
 
     setPower(value, callback) {
-        this.log(`setting on characteristic => ${value}`);
+        this.log(`setting on characteristic => ${!!value}`);
 
-        this.on = value;
+        this.on = !!value;
 
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on);
         this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
