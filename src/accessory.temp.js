@@ -13,6 +13,8 @@ module.exports = class TempAccessory {
 
         this.setPower = this.setPower.bind(this);
         this.getPower = this.getPower.bind(this);
+        this.setActiveIdentifier = this.setActiveIdentifier.bind(this);
+        this.getActiveIdentifier = this.getActiveIdentifier.bind(this);
 
         this.log = this.log.bind(this);
         this.debug = this.debug.bind(this);
@@ -112,7 +114,7 @@ module.exports = class TempAccessory {
 
     setActiveIdentifier(value, callback) {
         this.log(`setting active identifier characteristic => ${value}`);
-        
+
         this.on = value;
 
         callback(null);
