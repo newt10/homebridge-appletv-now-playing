@@ -8,6 +8,9 @@ class Platform {
         this.registerAccessory = this.registerAccessory.bind(this);
         this.onApiDidFinishLaunching = this.onApiDidFinishLaunching.bind(this);
 
+        this.log = this.log.bind(this);
+        this.debug = this.debug.bind(this);
+
         this.config = config;
         this.api = api;
         this.log = log;
@@ -16,6 +19,24 @@ class Platform {
 
         this.api.on("didFinishLaunching", this.onApiDidFinishLaunching);
     }
+
+    debug(message) {
+        if (this.config && this.config.debug) {
+            if(typeof mesage === "string") {
+                message = message.toLowerCase();
+            }
+
+            this.log(message);
+        }
+    };
+
+    log(message) {
+        if(typeof mesage === "string") {
+            message = message.toLowerCase();
+        }
+
+        this.log(message);
+    };
 
     registerAccessory(accessory) {
         this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
