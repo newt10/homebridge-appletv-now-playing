@@ -9,6 +9,7 @@ module.exports = class TempAccessory {
         this.configureServices = this.configureServices.bind(this);
         this.configureSwitchService = this.configureSwitchService.bind(this);
         this.configureTelevisionsService = this.configureTelevisionsService.bind(this);
+        this.configureInputServices = this.this.configureInputServices.bind(this);
 
         this.setRemote = this.setRemote.bind(this)
         this.setOn = this.setOn.bind(this);
@@ -115,7 +116,24 @@ module.exports = class TempAccessory {
         this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
         this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.SleepDiscoveryMode, this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
 
+        this.configureInputServices();
+
         this.log(`television service configured.`);
+    }
+
+    configureInputServices() {
+        this.debug(`configuring input services.`);
+
+        lodash.each(this.config.inputs, input => {
+            let uuid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv_input_${input.name}`);
+            let inputService = this.instance.getServiceById(uuid);
+
+            if(!inputService) {
+                inputService = this.instance.addService(this.platform.api.hap.Service.InputSource, uuid);
+            }
+        });
+
+        this.log(`input services configured.`);
     }
 
     setRemote(value, callback) {
