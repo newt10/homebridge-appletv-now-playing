@@ -45,7 +45,7 @@ class Platform {
     configureAccessory(accessory) {
         if (!accessory.context.device) {
             try {
-                this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+                //this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
             } catch (error) {
                 this.log(error);
             }
