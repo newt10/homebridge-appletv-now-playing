@@ -10,8 +10,8 @@ module.exports = class TempAccessory {
         this.configureSwitchService = this.configureSwitchService.bind(this);
         this.configureTelevisionsService = this.configureTelevisionsService.bind(this);
 
-        this.setPower = this.setPower.bind(this);
-        this.getPower = this.getPower.bind(this);
+        this.setOn = this.setOn.bind(this);
+        this.getOn = this.getOn.bind(this);
         this.setActiveIdentifier = this.setActiveIdentifier.bind(this);
         this.getActiveIdentifier = this.getActiveIdentifier.bind(this);
 
@@ -89,7 +89,7 @@ module.exports = class TempAccessory {
             this.switchService = this.instance.addService(this.platform.api.hap.Service.Switch, `${this.config.name} Switch`, `${this.uid}_switch`);
         }
 
-        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getPower).on("set", this.setPower);
+        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getOn).on("set", this.setOn);
 
         this.log(`switch service configured.`);
     }
@@ -105,7 +105,7 @@ module.exports = class TempAccessory {
             this.televisionService = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
         }
 
-        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getPower).on("set", this.setPower);
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getOn).on("set", this.setOn);
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
 
         this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
@@ -114,23 +114,38 @@ module.exports = class TempAccessory {
         this.log(`television service configured.`);
     }
 
-    configureInput
-
-    setPower(value, callback) {
+    setOn(value, callback) {
         this.debug(`setting on characteristic => ${!!value}`);
 
-        this.on = !!value;
+        this.on = value;
 
-        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on);
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on ? 1 : 0);
         this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
 
         callback(null);
     }
 
-    getPower(callback) {
+    getOn(callback) {
         this.debug(`requesting on characteristic => ${this.on}`);
 
         callback(null, this.on);
+    }
+
+    setActive(value, callback) {
+        this.debug(`setting active characteristic => ${!!value}`);
+
+        this.on = !!value;
+
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on);
+        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on ? 1 : 0);
+
+        callback(null);
+    }
+
+    getActive(callback) {
+        this.debug(`requesting active characteristic => ${this.on}`);
+
+        callback(null, this.on ? 1 : 0);
     }
 
     setActiveIdentifier(value, callback) {
