@@ -35,15 +35,21 @@ module.exports = class TempAccessory {
     }
 
     configureAccessory() {
+        this.log(`configuring accessory.`);
+
         this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv`);
         this.instance = new this.platform.api.platformAccessory(this.config.name, this.uid);
 
         this.configureServices();
 
         this.platform.registerAccessory(this.instance);
+
+        this.log(`accessory configured.`);
     }
 
     configureServices() {
+        this.log(`configuring accessory information service.`);
+
         this.instance
             .getService(this.platform.api.hap.Service.AccessoryInformation)
             .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, AccessoryManufacturer)
@@ -51,35 +57,48 @@ module.exports = class TempAccessory {
             .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, this.device.uid)
             .setCharacteristic(this.platform.api.hap.Characteristic.Name, this.config.name);
 
+        this.log(`accessory information service configured.`);
+
         this.configureSwitchService();
         this.configureTelevisionsService();
     }
 
     configureSwitchService() {
-        this.log(`setting on characteristic => ${value}`);
+        this.log(`configuring switch service.`);
 
         this.switchService = this.instance.getService(this.platform.api.hap.Service.Switch);
 
         if (!this.switchService) {
+            this.log(`creating switch service.`);
+
             this.switchService = this.instance.addService(this.platform.api.hap.Service.Switch, `${this.config.name} Switch`, `${this.uid}_switch`);
         }
 
         this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getPower).on("set", this.setPower);
+
+        this.log(`switch service configured.`);
     }
 
     configureTelevisionsService() {
+        this.log(`configuring television service.`);
+        
         this.televisionService = this.instance.getService(this.platform.api.hap.Service.Television);
 
         if (!this.televisionService) {
+            this.log(`creating television service.`);
+
             this.televisionService = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
         }
 
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getPower).on("set", this.setPower);
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
+
+        this.log(`television service configured.`);
     }
 
     setPower(value, callback) {
         this.log(`setting on characteristic => ${value}`);
+
         this.on = value;
 
         callback(null);
@@ -93,6 +112,7 @@ module.exports = class TempAccessory {
 
     setActiveIdentifier(value, callback) {
         this.log(`setting active identifier characteristic => ${value}`);
+        
         this.on = value;
 
         callback(null);
