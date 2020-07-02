@@ -79,7 +79,7 @@ class Accessory {
     async setPower(value, next) {
         clearTimeout(this.powerTimer);
 
-        this.platform.debug(`turning ${this.service.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
+        this.platform.debug(`turning ${this.primaryService.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
 
         if (!value && this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
