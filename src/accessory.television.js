@@ -18,7 +18,7 @@ class TelevisionAccessory extends Accessory {
     configureServices() {
         this.configureAccessoryInformationService();
         this.configureTVService();
-        this.configureInputServices();
+        //this.configureInputServices();
 
         super.onServicesConfigured.call(this);
     }
@@ -60,9 +60,9 @@ class TelevisionAccessory extends Accessory {
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, this.config.name)
                 .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, this.config.name);
 
-            this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("set", this.setInput);
+            //this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("set", this.setInput);
 
-            this.device.on("nowPlaying", this.onNowPlaying);
+            //this.device.on("nowPlaying", this.onNowPlaying);
 
             this.primaryService = this.tvService;
 
