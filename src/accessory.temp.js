@@ -12,6 +12,8 @@ module.exports = class TempAccessory {
 
         this.setOn = this.setOn.bind(this);
         this.getOn = this.getOn.bind(this);
+        this.setActive = this.setActive.bind(this);
+        this.getActive = this.getActive.bind(this);
         this.setActiveIdentifier = this.setActiveIdentifier.bind(this);
         this.getActiveIdentifier = this.getActiveIdentifier.bind(this);
 
