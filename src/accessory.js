@@ -69,6 +69,8 @@ class Accessory {
 
             this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
             this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
+
+            this.platform.debug(`auto power set to ${this.power ? "on" : "off"} for ${this.primaryService.type} service (${this.config.name} [${this.device.uid}]) .`);
         }
     }
 
@@ -79,7 +81,7 @@ class Accessory {
     async setPower(value, next) {
         clearTimeout(this.powerTimer);
 
-        this.platform.debug(`turning ${this.primaryService.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
+        this.platform.debug(`power set to ${value ? "on" : "off"} for ${this.primaryService.type} service (${this.config.name} [${this.device.uid}]) .`);
 
         if (!value && this.power) {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
@@ -94,6 +96,7 @@ class Accessory {
     }
 
     getPower(next) {
+        this.platform.debug(`power requested for ${this.primaryService.type} service (${this.config.name} [${this.device.uid}]).`);
         next(null, this.power);
     }
 }
