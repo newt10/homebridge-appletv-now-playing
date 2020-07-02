@@ -1,5 +1,4 @@
-const Accessory = require("./accessory");
-const { platformName } = require("./platform.temp");
+const lodash = require("lodash");
 
 const AccessoryModel = "Apple TV";
 const AccessoryManufacturer = "Apple";
@@ -40,11 +39,23 @@ module.exports = class TempAccessory {
         this.log(`configuring accessory.`);
 
         this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv`);
-        this.instance = new this.platform.api.platformAccessory(this.config.name, this.uid);
+        this.instance = lodash.find(this.platform.accessories, (accessory) => accessory.context.device.uid === this.device.uid);
+
+        if (!this.instance) {
+            this.instance = new this.platform.api.platformAccessory(this.config.name, this.uid);
+
+            this.platform.registerAccessory(this.instance);
+        }
+
+        this.instance.displayName = this.config.name;
+        this.instance.name = this.config.name;
+        this.instance.context.device = {
+            uid: this.device.uid,
+        };
+
+        this.platform.updateAccessories([this.accessory]);
 
         this.configureServices();
-
-        this.platform.registerAccessory(this.instance);
 
         this.log(`accessory configured.`);
     }
@@ -83,7 +94,7 @@ module.exports = class TempAccessory {
 
     configureTelevisionsService() {
         this.log(`configuring television service.`);
-        
+
         this.televisionService = this.instance.getService(this.platform.api.hap.Service.Television);
 
         if (!this.televisionService) {

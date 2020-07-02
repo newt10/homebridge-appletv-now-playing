@@ -4,6 +4,7 @@ const TempAccessory = require("./accessory.temp");
 
 class Platform {
     constructor(log, config, api) {
+        this.configureDevice = this.configureDevice.bind(this);
         this.configureAccessory = this.configureAccessory.bind(this);
         this.registerAccessory = this.registerAccessory.bind(this);
         this.onApiDidFinishLaunching = this.onApiDidFinishLaunching.bind(this);
@@ -22,27 +23,28 @@ class Platform {
 
     debug(message) {
         if (this.config && this.config.debug) {
-            if(typeof mesage === "string") {
+            if (typeof mesage === "string") {
                 message = message.toLowerCase();
             }
 
             this.log(message);
         }
-    };
+    }
 
     log(message) {
-        if(typeof mesage === "string") {
+        if (typeof mesage === "string") {
             message = message.toLowerCase();
         }
 
         this.log(message);
-    };
+    }
 
     registerAccessory(accessory) {
         this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
-    };
+    }
 
     configureAccessory(accessory) {
+        this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
         if (!accessory.context.device) {
             try {
                 //this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
@@ -50,12 +52,18 @@ class Platform {
                 this.log(error);
             }
         } else {
-            this.accessories.push(accessory);
+            //this.accessories.push(accessory);
         }
     }
 
+    configureDevice(deviceConfiguration) {
+        let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
+
+        new TempAccessory(this, this.config.devices[0], { uid: credentials.uniqueIdentifier });
+    }
+
     onApiDidFinishLaunching() {
-        let accessory = new TempAccessory(this, this.config.devices[0], { uid: "1234" });
+        this.config.devices.map(this.configureDevice);
     }
 }
 
