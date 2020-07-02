@@ -44,7 +44,7 @@ module.exports = class TempAccessory {
         if (!this.instance) {
             this.instance = new this.platform.api.platformAccessory(this.config.name, this.uid);
 
-            //this.platform.registerAccessory(this.instance);
+            this.platform.registerAccessory(this.instance);
         }
 
         this.instance.displayName = this.config.name;

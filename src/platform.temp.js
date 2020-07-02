@@ -48,7 +48,7 @@ class Platform {
     }
 
     configureAccessory(accessory) {
-        this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+        //this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
         if (!accessory.context.device) {
             try {
                 //this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
@@ -56,7 +56,7 @@ class Platform {
                 this.log(error);
             }
         } else {
-            //this.accessories.push(accessory);
+            this.accessories.push(accessory);
         }
     }
 
