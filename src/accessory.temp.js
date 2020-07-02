@@ -77,13 +77,19 @@ module.exports = class TempAccessory {
         this.log(`accessory information service configured.`);
 
         this.configureTelevisionsService();
-        //this.configureSwitchService();
+        this.configureSwitchService();
     }
 
     configureSwitchService() {
         this.debug(`configuring switch service.`);
 
         this.switchService = this.instance.getService(this.platform.api.hap.Service.Switch);
+
+        if(this.switchService) {
+            this.instance.removeService(this.switchService);
+        }
+
+        return;
 
         if (!this.switchService) {
             this.debug(`creating switch service.`);
