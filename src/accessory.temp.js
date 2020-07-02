@@ -127,6 +127,13 @@ module.exports = class TempAccessory {
     configureInputServices() {
         this.debug(`configuring input services.`);
 
+        let x = this.instance.getService(this.platform.api.hap.Service.InputSource);
+
+        while(x) {
+            this.instance.removeService(x);
+            x = this.instance.getService(this.platform.api.hap.Service.InputSource);
+        }
+
         lodash.each(this.config.inputs, (input, index) => {
             this.debug(`configuring input service for ${input.name}.`);
 
