@@ -36,12 +36,14 @@ module.exports = class TempAccessory {
     }
 
     configureAccessory() {
-        this.log(`configuring accessory.`);
+        this.debug(`configuring accessory.`);
 
         this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv`);
         this.instance = lodash.find(this.platform.accessories, (accessory) => accessory.context.device.uid === this.device.uid);
 
         if (!this.instance) {
+            this.debug(`creating accessory.`);
+
             this.instance = new this.platform.api.platformAccessory(this.config.name, this.uid);
 
             this.platform.registerAccessory(this.instance);
@@ -61,7 +63,7 @@ module.exports = class TempAccessory {
     }
 
     configureServices() {
-        this.log(`configuring accessory information service.`);
+        this.debug(`configuring accessory information service.`);
 
         this.instance
             .getService(this.platform.api.hap.Service.AccessoryInformation)
@@ -77,12 +79,12 @@ module.exports = class TempAccessory {
     }
 
     configureSwitchService() {
-        this.log(`configuring switch service.`);
+        this.debug(`configuring switch service.`);
 
         this.switchService = this.instance.getService(this.platform.api.hap.Service.Switch);
 
         if (!this.switchService) {
-            this.log(`creating switch service.`);
+            this.debug(`creating switch service.`);
 
             this.switchService = this.instance.addService(this.platform.api.hap.Service.Switch, `${this.config.name} Switch`, `${this.uid}_switch`);
         }
@@ -93,12 +95,12 @@ module.exports = class TempAccessory {
     }
 
     configureTelevisionsService() {
-        this.log(`configuring television service.`);
+        this.debug(`configuring television service.`);
 
         this.televisionService = this.instance.getService(this.platform.api.hap.Service.Television);
 
         if (!this.televisionService) {
-            this.log(`creating television service.`);
+            this.debug(`creating television service.`);
 
             this.televisionService = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
         }
@@ -106,11 +108,16 @@ module.exports = class TempAccessory {
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getPower).on("set", this.setPower);
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
 
+        this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
+        this.televisionService.setCharacteristic(this.platform.api.hap.Characteristic.SleepDiscoveryMode, this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
+
         this.log(`television service configured.`);
     }
 
+    configureInput
+
     setPower(value, callback) {
-        this.log(`setting on characteristic => ${!!value}`);
+        this.debug(`setting on characteristic => ${!!value}`);
 
         this.on = !!value;
 
@@ -121,13 +128,13 @@ module.exports = class TempAccessory {
     }
 
     getPower(callback) {
-        this.log(`requesting on characteristic => ${this.on}`);
+        this.debug(`requesting on characteristic => ${this.on}`);
 
         callback(null, this.on);
     }
 
     setActiveIdentifier(value, callback) {
-        this.log(`setting active identifier characteristic => ${value}`);
+        this.debug(`setting active identifier characteristic => ${value}`);
 
         this.on = value;
 
@@ -135,7 +142,7 @@ module.exports = class TempAccessory {
     }
 
     getActiveIdentifier(callback) {
-        this.log(`requesting active identifier characteristic => ${this.on}`);
+        this.debug(`requesting active identifier characteristic => ${this.on}`);
 
         callback(null, this.on);
     }
