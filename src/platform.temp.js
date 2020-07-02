@@ -8,6 +8,7 @@ class Platform {
 
         this.config = config;
         this.api = api;
+        this.log = log;
 
         this.accessories = [];
 
@@ -16,7 +17,11 @@ class Platform {
 
     configureAccessory(accessory) {
         if (!accessory.context.device) {
-            this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+            try {
+                this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+            } catch (error) {
+                this.log(error);
+            }
         } else {
             this.accessories.push(accessory);
         }
