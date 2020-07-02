@@ -27,8 +27,8 @@ module.exports = class TempAccessory {
     }
 
     configureAccessory() {
-        this.uid = this.platform.api.hap.uuid.generate(`${device.uid}_apple_tv`);
-        this.instance = new platform.api.platformAccessory(config.name, this.uid);
+        this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv`);
+        this.instance = new platform.api.platformAccessory(this.config.name, this.uid);
 
         this.configureServices();
 
@@ -53,7 +53,7 @@ module.exports = class TempAccessory {
             this.switchService = this.instance.addService(this.platform.api.hap.Service.Switch, `${this.config.name} Switch`, `${this.uid}_switch`);
         }
 
-        this.switchService.getCharacteristic(platform.api.hap.Characteristic.On).on("get", this.getPower).on("set", this.setPower);
+        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getPower).on("set", this.setPower);
     }
 
     setPower(value, callback) {
