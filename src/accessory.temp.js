@@ -61,8 +61,8 @@ module.exports = class TempAccessory {
 
         this.log(`accessory information service configured.`);
 
-        this.configureSwitchService();
         this.configureTelevisionsService();
+        this.configureSwitchService();
     }
 
     configureSwitchService() {
@@ -102,6 +102,9 @@ module.exports = class TempAccessory {
         this.log(`setting on characteristic => ${value}`);
 
         this.on = value;
+
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
+        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
 
         callback(null);
     }
