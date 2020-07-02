@@ -78,8 +78,8 @@ module.exports = class TempAccessory {
 
         this.log(`accessory information service configured.`);
 
-        this.configureTelevisionsService();
         this.configureSwitchService();
+        this.configureTelevisionsService();
     }
 
     configureSwitchService() {
