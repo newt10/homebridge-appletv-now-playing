@@ -103,7 +103,7 @@ module.exports = class TempAccessory {
             this.televisionService = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
         }
 
-        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getPower).on("set", this.setPower);
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getPower).on("set", this.setPower);
         this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
 
         this.log(`television service configured.`);
@@ -114,7 +114,7 @@ module.exports = class TempAccessory {
 
         this.on = value;
 
-        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
+        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.on);
         this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
 
         callback(null);
