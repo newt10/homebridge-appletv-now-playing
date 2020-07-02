@@ -15,6 +15,8 @@ class SwitchAccessory extends Accessory {
     configureServices() {
         this.configureAccessoryInformationService();
         this.configureSwitchService();
+
+        super.onServicesConfigured.call(this);
     };
 
     configureAccessoryInformationService() {
@@ -64,7 +66,7 @@ class SwitchAccessory extends Accessory {
 
             this.device.on("nowPlaying", this.onNowPlaying);
 
-            this.service = this.switchService;
+            this.primaryService = this.switchService;
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {

@@ -7,6 +7,7 @@ class Accessory {
         this.getPower = this.getPower.bind(this);
         this.onMessage = this.onMessage.bind(this);
         this.onSupportedCommands = this.onSupportedCommands.bind(this);
+        this.onServicesConfigured = this.onServicesConfigured.bind(this);
 
         this.type = type;
         this.platform = platform;
@@ -18,8 +19,6 @@ class Accessory {
         this.configureAccessory();
 
         this.device.on("message", this.onMessage);
-
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", this.setPower).on("get", this.getPower);
     }
 
     configureAccessory() {
@@ -53,7 +52,7 @@ class Accessory {
     onSupportedCommands(message) {
         if (!!message) {
             if (!message.length) {
-                this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
+                this.primaryService && this.primaryService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
             }
         }
     }
@@ -68,9 +67,13 @@ class Accessory {
                 this.power = true;
             }
 
-            this.service && this.service.updateCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
-            this.service && this.service.updateCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
+            this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
+            this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
         }
+    }
+
+    onServicesConfigured() {
+        this.primaryService && this.primaryService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", this.setPower).on("get", this.getPower);
     }
 
     async setPower(value, next) {

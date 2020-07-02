@@ -19,6 +19,8 @@ class TelevisionAccessory extends Accessory {
         this.configureAccessoryInformationService();
         this.configureTVService();
         this.configureInputServices();
+
+        super.onServicesConfigured.call(this);
     }
 
     configureAccessoryInformationService() {
@@ -62,7 +64,7 @@ class TelevisionAccessory extends Accessory {
 
             this.device.on("nowPlaying", this.onNowPlaying);
 
-            this.service = this.tvService;
+            this.primaryService = this.tvService;
 
             this.platform.debug(`${this.type} service for accessory (${this.device.name} [${this.device.uid}]) configured.`);
         } catch (error) {
