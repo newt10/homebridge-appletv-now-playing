@@ -137,14 +137,12 @@ module.exports = class TempAccessory {
         lodash.each(this.config.inputs, (input, index) => {
             this.debug(`configuring input service for ${input.name}.`);
 
-            let inputService = this.instance.getServiceById(`${this.device.uid}_apple_tv_input_${index}`);
+            let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
             if (!inputService) {
                 this.debug(`creating input service for ${input.name}.`);
 
-                inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
-
-                this.instance.addService(inputService);
+                inputService = this.instance.addService(this.platform.api.hap.Service.InputSource, input.name, `${this.device.uid}_apple_tv_input_${index}`);
             }
 
             inputService
