@@ -75,7 +75,7 @@ class Accessory {
     }
 
     onServicesConfigured() {
-        this.primaryService && this.primaryService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", this.setPower).on("get", this.getPower);
+        //this.primaryService && this.primaryService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", this.setPower).on("get", this.getPower);
     }
 
     async setPower(value, next) {
