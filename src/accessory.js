@@ -3,8 +3,9 @@ const appletv = require("node-appletv-x");
 class Accessory {
     constructor(type, platform, config, device) {
         this.configureAccessory = this.configureAccessory.bind(this);
-        this.onPower = this.onPower.bind(this);
-        this.onDeviceInfo = this.onDeviceInfo.bind(this);
+        this.setPower = this.setPower.bind(this);
+        this.getPower = this.getPower.bind(this);
+        this.onMessage = this.onMessage.bind(this);
         this.onSupportedCommands = this.onSupportedCommands.bind(this);
 
         this.type = type;
@@ -12,13 +13,13 @@ class Accessory {
         this.config = config;
         this.device = device;
         this.power = false;
-        this.powerTimer = null;
-        this.deviceInfoTimer = null;
         this.characteristics = require("./characteristics")(platform.api);
 
         this.configureAccessory();
 
-        this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceInfo), 5000);
+        this.device.on("message", this.onMessage);
+
+        this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", this.setPower).on("get", this.getPower);
     }
 
     configureAccessory() {
@@ -47,7 +48,7 @@ class Accessory {
         }
 
         this.platform.log(`${this.type} accessory (${this.device.name} [${this.device.uid}]) ready.`);
-    };
+    }
 
     onSupportedCommands(message) {
         if (!!message) {
@@ -55,15 +56,24 @@ class Accessory {
                 this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(false);
             }
         }
-    };
-
-    onDeviceInfo(message) {
-        this.power = message.payload.logicalDeviceCount == 1;
-        this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
-        this.service && this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
     }
 
-    async onPower(value, next) {
+    onMessage(message) {
+        if (message.payload.logicalDeviceCount) {
+            if (message.payload.logicalDeviceCount <= 0) {
+                this.power = false;
+            }
+
+            if (!messagePayload.isProxyGroupPlayer || messagePayload.isAirplayActive) {
+                this.power = true;
+            }
+
+            this.service && this.service.updateCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
+            this.service && this.service.updateCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
+        }
+    }
+
+    async setPower(value, next) {
         clearTimeout(this.powerTimer);
 
         this.platform.debug(`turning ${this.service.type} service for accessory (${this.device.name} [${this.device.uid}]) ${value ? "on" : "off"}.`);
@@ -76,9 +86,12 @@ class Accessory {
         }
 
         this.power = value;
-        this.powerTimer = setTimeout(() => this.device.sendIntroduction().then(this.onDeviceInfo), 10000);
 
         next(null);
+    }
+
+    getPower(next) {
+        next(null, this.power);
     }
 }
 

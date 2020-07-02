@@ -62,8 +62,6 @@ class SwitchAccessory extends Accessory {
             !this.switchService.getCharacteristic(this.characteristics.Duration) && this.switchService.addCharacteristic(this.characteristics.Duration);
             !this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.Active) && this.switchService.addCharacteristic(this.platform.api.hap.Characteristic.Active);
 
-            this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("set", super.onPower.bind(this));
-
             this.device.on("nowPlaying", this.onNowPlaying);
 
             this.service = this.switchService;
