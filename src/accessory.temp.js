@@ -3,7 +3,7 @@ const Accessory = require("./accessory");
 module.exports = class TempAccessory {
     constructor(platform, config, device) {
         let accessoryUid = platform.api.hap.uuid.generate(`${device.uid}`);
-        let accessory = new this.platform.api.platformAccessory(config.name, accessoryUid);
+        let accessory = new platform.api.platformAccessory(config.name, accessoryUid);
 
         this.on = false;
 
