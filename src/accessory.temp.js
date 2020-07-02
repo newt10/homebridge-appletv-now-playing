@@ -53,7 +53,7 @@ module.exports = class TempAccessory {
             uid: this.device.uid,
         };
 
-        this.platform.updateAccessories([this.accessory]);
+        this.platform.updateAccessory(this.instance);
 
         this.configureServices();
 

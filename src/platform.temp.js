@@ -43,6 +43,10 @@ class Platform {
         this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
     }
 
+    updateAccessory(accessory) {
+        this.api.updatePlatformAccessories([accessory]);
+    }
+
     configureAccessory(accessory) {
         this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
         if (!accessory.context.device) {
