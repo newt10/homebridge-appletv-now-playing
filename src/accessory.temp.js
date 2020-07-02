@@ -28,7 +28,7 @@ module.exports = class TempAccessory {
 
     configureAccessory() {
         this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv`);
-        this.instance = new platform.api.platformAccessory(this.config.name, this.uid);
+        this.instance = new this.platform.api.platformAccessory(this.config.name, this.uid);
 
         this.configureServices();
 
