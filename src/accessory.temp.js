@@ -127,7 +127,7 @@ module.exports = class TempAccessory {
     configureInputServices() {
         this.debug(`configuring input services.`);
 
-        if (this.config.inputs.length < this.instance.context.inputs.length) {
+        if (this.instance.context.inputs && this.config.inputs.length < this.instance.context.inputs.length) {
             for (let index = this.config.inputs.length; index < this.instance.context.inputs.length; index++) {
                 let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
