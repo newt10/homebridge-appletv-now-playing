@@ -68,6 +68,7 @@ module.exports = class TelevisionAccessory extends Accessory {
                 if (inputService) {
                     super.debug(`removing input service => ${index}.`);
 
+                    this.service.removeLinkedService(inputService);
                     this.instance.removeService(inputService);
                 }
             }
@@ -84,7 +85,7 @@ module.exports = class TelevisionAccessory extends Accessory {
                 inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
 
                 this.service.addLinkedService(inputService);
-                this.instance.addService(inputService);
+                this.instance.addService(inputService, true);
             }
 
             inputService
