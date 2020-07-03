@@ -64,7 +64,7 @@ module.exports = class Accessory {
         this.instance.displayName = `${this.config.name} ${this.type}`;
         this.instance.name = `${this.config.name} ${this.type}`;
         this.instance.context.uid = this.device.uid;
-        this.instance.version = 2;
+        this.instance.context.version = 2;
 
         if (update) {
             this.updateAccessory(this.instance);
