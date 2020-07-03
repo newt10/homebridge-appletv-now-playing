@@ -102,7 +102,7 @@ module.exports = class Accessory {
         this.power = value;
 
         setTimeout(() => callback(), 5000);
-        
+
         this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
     }
 
@@ -122,6 +122,8 @@ module.exports = class Accessory {
         if(this.power === power) {
             return;
         }
+
+        this.power = power;
 
         this.onPowerUpdate && this.onPowerUpdate(this.power);
 
