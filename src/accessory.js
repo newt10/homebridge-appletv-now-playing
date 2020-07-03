@@ -103,8 +103,6 @@ module.exports = class Accessory {
     }
 
     onDeviceMessage(message) {
-        this.debug(JSON.stringify(message));
-
         this.power = false;
 
         if (message.payload.logicalDeviceCount) {
