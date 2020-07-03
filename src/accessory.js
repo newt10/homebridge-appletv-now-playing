@@ -27,7 +27,7 @@ module.exports = class Accessory {
 
         this.device.sendIntroduction().then(this.onDeviceMessage);
 
-        setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
+        this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
     }
 
     debug(message) {
@@ -87,6 +87,8 @@ module.exports = class Accessory {
     }
 
     async togglePower(value, callback) {
+        clearInterval(this.deviceInfoTimer);
+
         this.debug(`toggle power => ${value ? "on" : "off"}.`);
 
         if (!value && this.power) {
@@ -100,6 +102,8 @@ module.exports = class Accessory {
         this.power = value;
 
         setTimeout(() => callback(), 5000);
+        
+        this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
     }
 
     onDeviceMessage(message) {
