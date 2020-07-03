@@ -41,18 +41,26 @@ class Platform {
     }
 
     registerAccessory(accessory) {
+        this.log(`registering accessory => ${accessory.name || accessory.UUID}.`);
+
         this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
     }
 
     unregisterAccessory(accessory) {
+        this.log(`unregistering accessory => ${accessory.name || accessory.UUID}.`);
+
         this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
     };
 
     publishExternalAccessory(accessory) {
+        this.log(`publishing external accessory => ${accessory.name || accessory.UUID}.`);
+
         this.api.publishExternalAccessories(Platform.pluginName, [accessory]);
     }
 
     updateAccessory(accessory) {
+        this.log(`updating accessory => ${accessory.name || accessory.UUID}.`);
+
         this.api.updatePlatformAccessories([accessory]);
     }
 

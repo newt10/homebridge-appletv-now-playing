@@ -47,19 +47,25 @@ module.exports = class Accessory {
 
         this.instance = lodash.find(this.platform.accessories, (accessory) => accessory.context.uid === this.device.uid);
 
+        let update = true;
+
         if (!this.instance) {
             this.debug(`creating ${this.type} accessory.`);
 
             this.instance = new this.platform.api.platformAccessory(`${this.config.name} ${this.type}`, this.uid);
 
             this.createAccessory(this.instance);
+
+            update = false;
         }
 
         this.instance.displayName = `${this.config.name} ${this.type}`;
         this.instance.name = `${this.config.name} ${this.type}`;
         this.instance.context.uid = this.device.uid;
 
-        this.updateAccessory(this.instance);
+        if (update) {
+            this.updateAccessory(this.instance);
+        }
 
         this.device.on("message", this.onDeviceMessage);
         this.device.on("nowPlaying", this.onNowPlaying);
@@ -115,7 +121,7 @@ module.exports = class Accessory {
             }
         }
 
-        if(this.power === power) {
+        if (this.power === power) {
             return;
         }
 
