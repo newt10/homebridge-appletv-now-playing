@@ -1,3 +1,5 @@
+const Platform = require("./platform");
+
 const appletv = require("node-appletv-x");
 const lodash = require("lodash");
 
@@ -41,7 +43,7 @@ module.exports = class Accessory {
     configureAccessory() {
         this.debug(`configuring ${this.type} accessory.`);
 
-        this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv_${this.type}`);
+        this.uid = this.platform.api.hap.uuid.generate(`${Platform.pluginName}-${this.device.uid}_apple_tv_${this.type}`);
 
         this.debug(this.uid);
 
