@@ -13,6 +13,7 @@ module.exports = class SwitchAccessory extends Accessory {
         this.getOn = this.getOn.bind(this);
         this.setActive = this.setActive.bind(this);
         this.getActive = this.getActive.bind(this);
+        this.onPowerUpdate = this.onPowerUpdate.bind(this);
 
         this.on = false;
         this.active = this.platform.api.hap.Characteristic.Active.INACTIVE;
@@ -67,5 +68,9 @@ module.exports = class SwitchAccessory extends Accessory {
         super.debug(`requesting active characteristic => ${this.active}`);
 
         callback(null, this.active);
+    }
+
+    onPowerUpdate(value) {
+        this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(value);
     }
 };

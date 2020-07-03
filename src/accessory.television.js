@@ -16,6 +16,7 @@ module.exports = class TelevisionAccessory extends Accessory {
         this.getActive = this.getActive.bind(this);
         this.setActiveIdentifier = this.setActiveIdentifier.bind(this);
         this.getActiveIdentifier = this.getActiveIdentifier.bind(this);
+        this.onPowerUpdate = this.onPowerUpdate.bind(this);
 
         this.active = false;
         this.activeIdentifier = 0;
@@ -128,5 +129,9 @@ module.exports = class TelevisionAccessory extends Accessory {
         super.debug(`requesting active identifier characteristic => ${this.activeIdentifier}`);
 
         callback(null, this.activeIdentifier);
+    }
+
+    onPowerUpdate(value) {
+        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE);
     }
 };

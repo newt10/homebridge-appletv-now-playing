@@ -9,6 +9,8 @@ module.exports = class Accessory {
         this.updateAccessory = this.updateAccessory.bind(this);
         this.configureServices = this.configureServices.bind(this);
 
+        this.onDeviceMessage = this.onDeviceMessage.bind(this);
+
         this.log = this.log.bind(this);
         this.debug = this.debug.bind(this);
 
@@ -59,6 +61,8 @@ module.exports = class Accessory {
 
         this.updateAccessory(this.instance);
 
+        this.device.on("message", this.onDeviceMessage);
+
         this.log(`accessory configured.`);
     }
 
@@ -73,5 +77,23 @@ module.exports = class Accessory {
             .setCharacteristic(this.platform.api.hap.Characteristic.Name, this.config.name);
 
         this.log(`${this.type} accessory information service configured.`);
+    }
+
+    onDeviceMessage() {
+        if (message.payload.logicalDeviceCount) {
+            if (message.payload.logicalDeviceCount <= 0) {
+                this.power = false;
+            }
+
+            if (!messagePayload.isProxyGroupPlayer || messagePayload.isAirplayActive) {
+                this.power = true;
+            }
+        } else {
+            this.power = false;
+        }
+
+        this.onPowerUpdate && this.onPowerUpdate(this.power);
+
+        this.debug(`power status update => ${this.power ? "on" : "off"}.`);
     }
 };

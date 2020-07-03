@@ -24,21 +24,21 @@ class Platform {
 
     debug(message) {
         if (this.config && this.config.debug) {
-            if(typeof mesage === "string") {
+            if (typeof mesage === "string") {
                 message = message.toLowerCase();
             }
 
             this.logger(message);
         }
-    };
+    }
 
     log(message) {
-        if(typeof mesage === "string") {
+        if (typeof mesage === "string") {
             message = message.toLowerCase();
         }
 
         this.logger(message);
-    };
+    }
 
     registerAccessory(accessory) {
         this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
@@ -65,13 +65,26 @@ class Platform {
         }
     }
 
-    configureDevice(deviceConfiguration) {
+    async configureDevice(deviceConfiguration) {
         let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
 
-        new SwitchAccessory(this, this.config.devices[0], { uid: credentials.uniqueIdentifier });
+        this.debug(`scanning for device => ${credentials.uniqueIdentifier}.`);
 
-        if(this.config.devices[0].showTvAccessory) {
-            new TelevisionAccessory(this, this.config.devices[0], { uid: credentials.uniqueIdentifier });
+        let devices = await appletv.scan(credentials.uniqueIdentifier);
+
+        if (devices && devices.length) {
+            this.debug(`device found => ${credentials.uniqueIdentifier}.`);
+            this.debug(`connecting to device => ${credentials.uniqueIdentifier}.`);
+
+            let connectedDevice = await devices[0].openConnection(credentials);
+
+            this.debug(`connected to device => ${credentials.uniqueIdentifier}.`);
+
+            new SwitchAccessory(this, this.config.devices[0], connectedDevice);
+
+            if (this.config.devices[0].showTvAccessory) {
+                new TelevisionAccessory(this, this.config.devices[0], connectedDevice);
+            }
         }
     }
 
