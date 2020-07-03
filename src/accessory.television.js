@@ -33,12 +33,12 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     configureTelevisionService() {
-        this.debug(`configuring television service.`);
+        super.debug(`configuring television service.`);
 
         this.service = this.instance.getService(this.platform.api.hap.Service.Television);
 
         if (!this.service) {
-            this.debug(`creating television service.`);
+            super.debug(`creating television service.`);
 
             this.service = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
         }
@@ -48,36 +48,33 @@ module.exports = class TelevisionAccessory extends Accessory {
         this.service.getCharacteristic(this.platform.api.hap.Characteristic.RemoteKey).on("set", this.setRemote);
 
         this.service.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
-        this.service.setCharacteristic(
-            this.platform.api.hap.Characteristic.SleepDiscoveryMode,
-            this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE
-        );
+        this.service.setCharacteristic(this.platform.api.hap.Characteristic.SleepDiscoveryMode, this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
 
         this.configureInputServices();
 
-        this.log(`television service configured.`);
+        super.log(`television service configured.`);
     }
 
     configureInputServices() {
-        this.debug(`configuring input services.`);
+        super.debug(`configuring input services.`);
 
         if (this.instance.context.inputs && this.config.inputs.length < this.instance.context.inputs.length) {
             for (let index = this.config.inputs.length; index < this.instance.context.inputs.length; index++) {
                 let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
-                if(inputService) {
+                if (inputService) {
                     this.instance.removeService(inputService);
                 }
             }
         }
 
         lodash.each(this.config.inputs, (input, index) => {
-            this.debug(`configuring input service for ${input.name}.`);
+            super.debug(`configuring input service for ${input.name}.`);
 
             let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
             if (!inputService) {
-                this.debug(`creating input service for ${input.name}.`);
+                super.debug(`creating input service for ${input.name}.`);
 
                 inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
 
@@ -93,20 +90,20 @@ module.exports = class TelevisionAccessory extends Accessory {
                 .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
                 .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
 
-            this.log(`input service for ${input.name} configured.`);
+            super.log(`input service for ${input.name} configured.`);
         });
 
         this.instance.context.inputs = this.config.inputs;
 
-        this.log(`input services configured.`);
+        super.log(`input services configured.`);
     }
 
     setRemote(value, callback) {
-        this.debug(`setting on remote => ${!!value}`);
+        super.debug(`setting on remote => ${!!value}`);
     }
 
     setActive(value, callback) {
-        this.debug(`setting active characteristic => ${value}`);
+        super.debug(`setting active characteristic => ${value}`);
 
         this.active = value;
         this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
@@ -115,13 +112,13 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     getActive(callback) {
-        this.debug(`requesting active characteristic => ${this.active}`);
+        super.debug(`requesting active characteristic => ${this.active}`);
 
         callback(null, this.active);
     }
 
     setActiveIdentifier(value, callback) {
-        this.debug(`setting active identifier characteristic => ${value}`);
+        super.debug(`setting active identifier characteristic => ${value}`);
 
         this.activeIdentifier = value;
         this.service.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(this.activeIdentifier);
@@ -130,7 +127,7 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     getActiveIdentifier(callback) {
-        this.debug(`requesting active identifier characteristic => ${this.activeIdentifier}`);
+        super.debug(`requesting active identifier characteristic => ${this.activeIdentifier}`);
 
         callback(null, this.activeIdentifier);
     }
