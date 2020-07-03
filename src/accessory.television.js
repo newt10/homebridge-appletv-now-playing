@@ -141,10 +141,11 @@ module.exports = class TelevisionAccessory extends Accessory {
         if (this.activeIdentifier && this.activeIdentifier == value) return;
 
         this.activeIdentifier = value;
+        
+        let input = this.config.inputs[this.activeIdentifier];
 
         this.platform.debug(`switching to input => ${input.name}.`);
 
-        let input = this.config.inputs[this.activeIdentifier];
         let column = input.index % 5;
         let row = (input.index - column) / 5;
 
