@@ -57,8 +57,7 @@ module.exports = class SwitchAccessory extends Accessory {
     setActive(value, callback) {
         this.debug(`setting active characteristic => ${value}`);
 
-        this.active = value;
-
+        this.active = !!value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE;
         this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
 
         callback(null);
