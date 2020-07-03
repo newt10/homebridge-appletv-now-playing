@@ -64,7 +64,7 @@ module.exports = class TelevisionAccessory extends Accessory {
                 let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
                 if (inputService) {
-                    super.debug(`removing input service => ${input.name}.`);
+                    super.debug(`removing input service => ${index}.`);
 
                     this.instance.removeService(inputService);
                 }
@@ -97,6 +97,8 @@ module.exports = class TelevisionAccessory extends Accessory {
         });
 
         this.instance.context.inputs = this.config.inputs;
+
+        this.platform.publishExternalAccessory(this.instance);
 
         super.log(`input services configured.`);
     }
