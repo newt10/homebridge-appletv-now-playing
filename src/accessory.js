@@ -55,8 +55,8 @@ module.exports = class Accessory {
             this.createAccessory(this.instance);
         }
 
-        this.instance.displayName = this.config.name;
-        this.instance.name = this.config.name;
+        this.instance.displayName = `${this.config.name} ${this.type}`;
+        this.instance.name = `${this.config.name} ${this.type}`;
         this.instance.context.uid = this.device.uid;
 
         this.updateAccessory(this.instance);
@@ -74,7 +74,7 @@ module.exports = class Accessory {
             .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, AccessoryManufacturer)
             .setCharacteristic(this.platform.api.hap.Characteristic.Model, AccessoryModel)
             .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, this.device.uid)
-            .setCharacteristic(this.platform.api.hap.Characteristic.Name, this.config.name);
+            .setCharacteristic(this.platform.api.hap.Characteristic.Name, `${this.config.name} ${this.type}`);
 
         this.log(`${this.type} accessory information service configured.`);
     }
