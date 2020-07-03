@@ -103,16 +103,20 @@ module.exports = class Accessory {
     }
 
     onDeviceMessage(message) {
-        this.power = false;
+        let power = false;
 
         if (message.payload.logicalDeviceCount) {
             if (message.payload.logicalDeviceCount <= 0) {
-                this.power = false;
+                power = false;
             }
 
             if (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive) {
-                this.power = true;
+                power = true;
             }
+        }
+
+        if(this.power === power) {
+            return;
         }
 
         this.onPowerUpdate && this.onPowerUpdate(this.power);
