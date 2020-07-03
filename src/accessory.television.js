@@ -2,7 +2,7 @@ const lodash = require("lodash");
 const Accessory = require("./accessory");
 
 module.exports = class TelevisionAccessory extends Accessory {
-    static Type = "television";
+    static Type = "Television";
 
     constructor(platform, config, device) {
         super(TelevisionAccessory.Type, platform, config, device);

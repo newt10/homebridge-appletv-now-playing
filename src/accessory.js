@@ -31,11 +31,11 @@ module.exports = class Accessory {
     }
 
     debug(message) {
-        this.platform.debug(`(${this.instance.name}) ${message}`);
+        this.platform.debug(`(${this.config.name} ${this.type}) ${message}`);
     }
 
     log(message) {
-        this.platform.log(`(${this.instance.name}) ${message}`);
+        this.platform.log(`(${this.config.name} ${this.type}) ${message}`);
     }
 
     createAccessory() {
@@ -55,7 +55,7 @@ module.exports = class Accessory {
         if (!this.instance) {
             this.debug(`creating ${this.type} accessory.`);
 
-            this.instance = new this.platform.api.platformAccessory(this.config.name, this.uid);
+            this.instance = new this.platform.api.platformAccessory(`${this.config.name} ${this.type}`, this.uid);
 
             this.createAccessory(this.instance);
         }

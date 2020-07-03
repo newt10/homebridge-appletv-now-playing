@@ -1,7 +1,7 @@
 const Accessory = require("./accessory");
 
 module.exports = class SwitchAccessory extends Accessory {
-    static Type = "switch";
+    static Type = "Switch";
 
     constructor(platform, config, device) {
         super(SwitchAccessory.Type, platform, config, device);
