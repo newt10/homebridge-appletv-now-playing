@@ -53,6 +53,8 @@ module.exports = class TelevisionAccessory extends Accessory {
 
         this.configureInputServices();
 
+        this.platform.updateAccessory(this.instance);
+
         super.log(`television service configured.`);
     }
 
@@ -97,8 +99,6 @@ module.exports = class TelevisionAccessory extends Accessory {
         });
 
         this.instance.context.inputs = this.config.inputs;
-
-        this.platform.publishExternalAccessory(this.instance);
 
         super.log(`input services configured.`);
     }
