@@ -1,10 +1,10 @@
 const Accessory = require("./accessory");
 
 module.exports = class SwitchAccessory extends Accessory {
-    type = "switch";
+    static Type = "switch";
 
     constructor(platform, config, device) {
-        super(this.type, platform, config, device);
+        super(SwitchAccessory.Type, platform, config, device);
 
         this.configureServices = this.configureServices.bind(this);
         this.configureSwitchService = this.configureSwitchService.bind(this);
@@ -26,15 +26,15 @@ module.exports = class SwitchAccessory extends Accessory {
     configureSwitchService() {
         this.debug(`configuring switch service.`);
 
-        this.switchService = this.instance.getService(this.platform.api.hap.Service.Switch);
+        this.service = this.instance.getService(this.platform.api.hap.Service.Switch);
 
-        if (!this.switchService) {
+        if (!this.service) {
             this.debug(`creating switch service.`);
 
-            this.switchService = this.instance.addService(this.platform.api.hap.Service.Switch, `${this.config.name} Switch`, `${this.uid}_switch`);
+            this.service = this.instance.addService(this.platform.api.hap.Service.Switch, `${this.config.name} Switch`, `${this.uid}_switch`);
         }
 
-        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getOn).on("set", this.setOn);
+        this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).on("get", this.getOn).on("set", this.setOn);
 
         this.log(`switch service configured.`);
     }
@@ -43,7 +43,7 @@ module.exports = class SwitchAccessory extends Accessory {
         this.debug(`setting on characteristic => ${value}`);
 
         this.on = value;
-        this.switchService.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
+        this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
 
         callback(null);
     }
@@ -59,7 +59,7 @@ module.exports = class SwitchAccessory extends Accessory {
 
         this.active = value;
 
-        this.televisionService.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
+        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
 
         callback(null);
     }

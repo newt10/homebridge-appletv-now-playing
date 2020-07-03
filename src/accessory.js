@@ -4,7 +4,7 @@ const AccessoryModel = "Apple TV";
 const AccessoryManufacturer = "Apple";
 
 module.exports = class Accessory {
-    constructor(platform, config, device) {
+    constructor(type, platform, config, device) {
         this.createAccessory = this.createAccessory.bind(this);
         this.updateAccessory = this.updateAccessory.bind(this);
         this.configureServices = this.configureServices.bind(this);
@@ -16,7 +16,7 @@ module.exports = class Accessory {
         this.config = config;
         this.device = device;
 
-        this.on = false;
+        this.type = type;
 
         this.configureAccessory();
     }
