@@ -59,11 +59,15 @@ class Platform {
     configureAccessory(accessory) {
         if (!accessory.context.uid) {
             try {
-                //this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+                this.log(`removing orphaned accessory => ${accessory.name || accessory.UUID}.`);
+
+                this.unregisterAccessory(accessory);
             } catch (error) {
                 this.log(error);
             }
         } else {
+            this.log(`loaded cached accessory => ${accessory.name || accessory.UUID}.`);
+
             this.accessories.push(accessory);
         }
     }
