@@ -95,6 +95,8 @@ module.exports = class Accessory {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
             await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
         } else if (value && !this.power) {
+            await this.device.sendKeyPressAndRelease(1, 0x83);
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
             await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
         }
 
