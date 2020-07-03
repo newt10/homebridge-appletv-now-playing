@@ -20,7 +20,7 @@ module.exports = class TelevisionAccessory extends Accessory {
         this.active = false;
         this.activeIdentifier = 0;
 
-        this.configureAccessories(config, device);
+        this.configureServices();
     }
 
     createAccessory() {

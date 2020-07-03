@@ -69,8 +69,6 @@ module.exports = class Accessory {
 
         this.updateAccessory(this.instance);
 
-        this.configureServices();
-
         this.log(`accessory configured.`);
     }
 

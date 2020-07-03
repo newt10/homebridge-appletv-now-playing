@@ -70,7 +70,7 @@ class Platform {
 
         new SwitchAccessory(this, this.config.devices[0], { uid: credentials.uniqueIdentifier });
 
-        if(this.config.showTVAccessory) {
+        if(this.config.devices[0].showTVAccessory) {
             new TelevisionAccessory(this, this.config.devices[0], { uid: credentials.uniqueIdentifier });
         }
     }
