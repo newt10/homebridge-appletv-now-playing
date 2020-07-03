@@ -21,8 +21,11 @@ module.exports = class Accessory {
         this.device = device;
 
         this.type = type;
+        this.power = false;
 
         this.configureAccessory();
+
+        setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
     }
 
     debug(message) {
@@ -92,10 +95,13 @@ module.exports = class Accessory {
         }
 
         this.onPowerUpdate && this.onPowerUpdate(value);
+        this.power = value;
     }
 
     onDeviceMessage(message) {
         this.debug(JSON.stringify(message));
+
+        this.power = false;
 
         if (message.payload.logicalDeviceCount) {
             if (message.payload.logicalDeviceCount <= 0) {
@@ -105,8 +111,6 @@ module.exports = class Accessory {
             if (!messagePayload.isProxyGroupPlayer || messagePayload.isAirplayActive) {
                 this.power = true;
             }
-        } else {
-            this.power = false;
         }
 
         this.onPowerUpdate && this.onPowerUpdate(this.power);
