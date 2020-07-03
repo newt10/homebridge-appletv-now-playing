@@ -145,7 +145,10 @@ module.exports = class TempAccessory {
             if (!inputService) {
                 this.debug(`creating input service for ${input.name}.`);
 
-                inputService = this.instance.addService(this.platform.api.hap.Service.InputSource, input.name, `${this.device.uid}_apple_tv_input_${index}`);
+                inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
+
+                this.televisionService.addLinkedService(inputService);
+                this.instance.addService(inputService);
             }
 
             inputService
@@ -155,8 +158,6 @@ module.exports = class TempAccessory {
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, input.name)
                 .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
                 .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
-
-            this.televisionService.addLinkedService(inputService);
 
             this.log(`input service for ${input.name} configured.`);
         });
