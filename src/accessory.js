@@ -108,7 +108,7 @@ module.exports = class Accessory {
                 this.power = false;
             }
 
-            if (!messagePayload.isProxyGroupPlayer || messagePayload.isAirplayActive) {
+            if (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive) {
                 this.power = true;
             }
         }
