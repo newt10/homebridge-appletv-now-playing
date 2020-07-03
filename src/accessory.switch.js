@@ -15,7 +15,7 @@ module.exports = class SwitchAccessory extends Accessory {
         this.getActive = this.getActive.bind(this);
 
         this.on = false;
-        this.active = this.Characteristic.Active.INACTIVE;
+        this.active = this.platform.api.hap.Characteristic.Active.INACTIVE;
     }
 
     configureServices() {
