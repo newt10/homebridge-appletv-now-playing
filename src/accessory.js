@@ -21,14 +21,6 @@ module.exports = class Accessory {
         this.configureAccessory();
     }
 
-    createAccessory() {
-        this.platform.registerAccessory(this.instance);
-    }
-
-    updateAccessory() {
-        this.platform.updateAccessory(this.instance);
-    }
-
     debug(message) {
         if (this.config && this.config.debug) {
             if (typeof mesage === "string") {
@@ -47,7 +39,15 @@ module.exports = class Accessory {
         this.log(message);
     }
 
-    configureAccessories() {
+    createAccessory() {
+        this.platform.registerAccessory(this.instance);
+    }
+
+    updateAccessory() {
+        this.platform.updateAccessory(this.instance);
+    }
+
+    configureAccessory() {
         this.debug(`configuring ${this.type} accessory.`);
 
         this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv_${this.type}`);
