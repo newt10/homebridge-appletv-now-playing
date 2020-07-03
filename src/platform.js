@@ -68,17 +68,17 @@ class Platform {
     async configureDevice(deviceConfiguration) {
         let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
 
-        this.debug(`scanning for device => ${credentials.uniqueIdentifier}.`);
+        this.debug(`(${deviceConfiguration.name}) scanning for device => ${credentials.uniqueIdentifier}.`);
 
         let devices = await appletv.scan(credentials.uniqueIdentifier);
 
         if (devices && devices.length) {
-            this.debug(`device found => ${credentials.uniqueIdentifier}.`);
-            this.debug(`connecting to device => ${credentials.uniqueIdentifier}.`);
+            this.debug(`(${deviceConfiguration.name}) device found => ${credentials.uniqueIdentifier}.`);
+            this.debug(`(${deviceConfiguration.name}) connecting to device => ${credentials.uniqueIdentifier}.`);
 
             let connectedDevice = await devices[0].openConnection(credentials);
 
-            this.debug(`connected to device => ${credentials.uniqueIdentifier}.`);
+            this.debug(`(${deviceConfiguration.name}) connected to device => ${credentials.uniqueIdentifier}.`);
 
             new SwitchAccessory(this, this.config.devices[0], connectedDevice);
 

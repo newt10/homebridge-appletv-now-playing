@@ -8,6 +8,7 @@ module.exports = class Accessory {
         this.createAccessory = this.createAccessory.bind(this);
         this.updateAccessory = this.updateAccessory.bind(this);
         this.configureServices = this.configureServices.bind(this);
+        this.togglePower = this.togglePower.bind(this);
 
         this.onDeviceMessage = this.onDeviceMessage.bind(this);
 
@@ -79,7 +80,22 @@ module.exports = class Accessory {
         this.log(`${this.type} accessory information service configured.`);
     }
 
-    onDeviceMessage() {
+    togglePower(value) {
+        this.debug(`toggle power => ${value ? "on" : "off"}.`);
+
+        if (!value && this.power) {
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+        } else if (value && !this.power) {
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+        }
+
+        this.onPowerUpdate && this.onPowerUpdate(value);
+    }
+
+    onDeviceMessage(message) {
+        this.debug(message);
+
         if (message.payload.logicalDeviceCount) {
             if (message.payload.logicalDeviceCount <= 0) {
                 this.power = false;

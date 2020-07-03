@@ -108,6 +108,8 @@ module.exports = class TelevisionAccessory extends Accessory {
 
         this.active = value;
 
+        super.togglePower(!!this.active);
+
         callback(null);
     }
 
@@ -132,6 +134,7 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     onPowerUpdate(value) {
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE);
+        this.active = value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE
+        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
     }
 };
