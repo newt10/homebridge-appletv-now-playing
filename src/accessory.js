@@ -22,15 +22,11 @@ module.exports = class Accessory {
     }
 
     debug(message) {
-        this.platform.log(message);
+        this.platform.debug(`(${this.config.name}) ${message}`);
     }
 
     log(message) {
-        if (typeof mesage === "string") {
-            message = message.toLowerCase();
-        }
-
-        this.platform.log(message);
+        this.platform.log(`(${this.config.name}) ${message}`);
     }
 
     createAccessory() {
