@@ -15,7 +15,7 @@ class Platform {
 
         this.config = config;
         this.api = api;
-        this.log = log;
+        this.logger = log;
 
         this.accessories = [];
 
@@ -28,7 +28,7 @@ class Platform {
                 message = message.toLowerCase();
             }
 
-            this.log(message);
+            this.logger(message);
         }
     };
 
@@ -37,7 +37,7 @@ class Platform {
             message = message.toLowerCase();
         }
 
-        this.log(message);
+        this.logger(message);
     };
 
     registerAccessory(accessory) {

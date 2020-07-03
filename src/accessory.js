@@ -8,7 +8,7 @@ module.exports = class Accessory {
         this.createAccessory = this.createAccessory.bind(this);
         this.updateAccessory = this.updateAccessory.bind(this);
         this.configureServices = this.configureServices.bind(this);
-        
+
         this.log = this.log.bind(this);
         this.debug = this.debug.bind(this);
 
@@ -22,13 +22,7 @@ module.exports = class Accessory {
     }
 
     debug(message) {
-        if (this.config && this.config.debug) {
-            if (typeof mesage === "string") {
-                message = message.toLowerCase();
-            }
-
-            this.platform.log(message);
-        }
+        this.platform.log(message);
     }
 
     log(message) {
