@@ -80,7 +80,7 @@ module.exports = class Accessory {
         this.log(`${this.type} accessory information service configured.`);
     }
 
-    togglePower(value) {
+    async togglePower(value) {
         this.debug(`toggle power => ${value ? "on" : "off"}.`);
 
         if (!value && this.power) {
