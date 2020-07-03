@@ -147,27 +147,25 @@ module.exports = class TelevisionAccessory extends Accessory {
         let column = input.index % 5;
         let row = (input.index - column) / 5;
 
-        // await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+        await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
 
-        // setTimeout(async () => {
-        //     await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+        setTimeout(async () => {
+            await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
 
-        //     setTimeout(async () => {
-        //         for (let i = 0; i < column - 1; i++) {
-        //             await this.device.sendKeyCommand(appletv.AppleTV.Key.Right);
-        //         }
+            setTimeout(async () => {
+                for (let i = 0; i < column - 1; i++) {
+                    await this.device.sendKeyCommand(appletv.AppleTV.Key.Right);
+                }
 
-        //         for (let i = 0; i < row; i++) {
-        //             await this.device.sendKeyCommand(appletv.AppleTV.Key.Down);
-        //         }
+                for (let i = 0; i < row; i++) {
+                    await this.device.sendKeyCommand(appletv.AppleTV.Key.Down);
+                }
 
-        //         await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+                await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
 
-        //         next(null, value);
-        //     }, 1000);
-        // }, 2000);
-
-        callback(null);
+                callback(null);
+            }, 1000);
+        }, 2000);
     }
 
     getActiveIdentifier(callback) {
