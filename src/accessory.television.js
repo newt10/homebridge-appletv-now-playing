@@ -142,7 +142,7 @@ module.exports = class TelevisionAccessory extends Accessory {
 
         this.activeIdentifier = value;
 
-        this.platform.debug(`switching to input => ${this.input.name}.`);
+        this.platform.debug(`switching to input => ${input.name}.`);
 
         let input = this.config.inputs[this.activeIdentifier];
         let column = input.index % 5;
