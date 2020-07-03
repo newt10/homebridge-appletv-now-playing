@@ -27,7 +27,7 @@ module.exports = class Accessory {
                 message = message.toLowerCase();
             }
 
-            this.log(message);
+            this.platform.log(message);
         }
     }
 
@@ -36,7 +36,7 @@ module.exports = class Accessory {
             message = message.toLowerCase();
         }
 
-        this.log(message);
+        this.platform.log(message);
     }
 
     createAccessory() {
