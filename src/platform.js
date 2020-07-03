@@ -44,6 +44,10 @@ class Platform {
         this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
     }
 
+    unregisterAccessory(accessory) {
+        this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+    };
+
     publishExternalAccessory(accessory) {
         this.api.publishExternalAccessories(Platform.pluginName, [accessory]);
     }
@@ -53,8 +57,7 @@ class Platform {
     }
 
     configureAccessory(accessory) {
-        //this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
-        if (!accessory.context.device) {
+        if (!accessory.context.uid) {
             try {
                 //this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
             } catch (error) {

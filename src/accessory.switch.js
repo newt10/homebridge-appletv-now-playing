@@ -6,6 +6,9 @@ module.exports = class SwitchAccessory extends Accessory {
     constructor(platform, config, device) {
         super(SwitchAccessory.Type, platform, config, device);
 
+        this.createAccessory = this.createAccessory.bind(this);
+        this.updateAccessory = this.updateAccessory.bind(this);
+
         this.configureServices = this.configureServices.bind(this);
         this.configureSwitchService = this.configureSwitchService.bind(this);
 
@@ -19,6 +22,14 @@ module.exports = class SwitchAccessory extends Accessory {
         this.active = this.platform.api.hap.Characteristic.Active.INACTIVE;
 
         this.configureServices();
+    }
+
+    createAccessory() {
+        this.platform.registerAccessory(this.instance);
+    }
+
+    updateAccessory() {
+        this.platform.updateAccessory(this.instance);
     }
 
     configureServices() {

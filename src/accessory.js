@@ -38,14 +38,6 @@ module.exports = class Accessory {
         this.platform.log(`(${this.config.name} ${this.type}) ${message}`);
     }
 
-    createAccessory() {
-        this.platform.registerAccessory(this.instance);
-    }
-
-    updateAccessory() {
-        this.platform.updateAccessory(this.instance);
-    }
-
     configureAccessory() {
         this.debug(`configuring ${this.type} accessory.`);
 
@@ -65,9 +57,7 @@ module.exports = class Accessory {
 
         this.instance.displayName = this.config.name;
         this.instance.name = this.config.name;
-        this.instance.context.device = {
-            uid: this.device.uid,
-        };
+        this.instance.context.uid = this.device.uid;
 
         this.updateAccessory(this.instance);
 

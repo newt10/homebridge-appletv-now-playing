@@ -7,6 +7,9 @@ module.exports = class TelevisionAccessory extends Accessory {
     constructor(platform, config, device) {
         super(TelevisionAccessory.Type, platform, config, device);
 
+        this.createAccessory = this.createAccessory.bind(this);
+        this.updateAccessory = this.updateAccessory.bind(this);
+
         this.configureServices = this.configureServices.bind(this);
         this.configureTelevisionService = this.configureTelevisionService.bind(this);
         this.configureInputServices = this.configureInputServices.bind(this);
@@ -26,6 +29,10 @@ module.exports = class TelevisionAccessory extends Accessory {
 
     createAccessory() {
         this.platform.publishExternalAccessory(this.instance);
+    }
+
+    updateAccessory() {
+        this.platform.updateAccessory(this.instance);
     }
 
     configureServices() {
