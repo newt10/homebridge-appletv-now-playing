@@ -62,6 +62,7 @@ module.exports = class Accessory {
         this.updateAccessory(this.instance);
 
         this.device.on("message", this.onDeviceMessage);
+        this.device.on("nowPlaying", this.onNowPlaying);
 
         this.log(`accessory configured.`);
     }

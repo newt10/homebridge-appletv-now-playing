@@ -19,7 +19,9 @@ module.exports = class TelevisionAccessory extends Accessory {
         this.getActive = this.getActive.bind(this);
         this.setActiveIdentifier = this.setActiveIdentifier.bind(this);
         this.getActiveIdentifier = this.getActiveIdentifier.bind(this);
+
         this.onPowerUpdate = this.onPowerUpdate.bind(this);
+        this.onNowPlaying = this.onNowPlaying.bind(this);
 
         this.active = false;
         this.activeIdentifier = 0;
@@ -97,6 +99,8 @@ module.exports = class TelevisionAccessory extends Accessory {
                 this.instance.addService(inputService, true);
             }
 
+            input.identifier = index;
+
             inputService
                 .setCharacteristic(this.platform.api.hap.Characteristic.Identifier, index)
                 .setCharacteristic(this.platform.api.hap.Characteristic.IsConfigured, this.platform.api.hap.Characteristic.IsConfigured.CONFIGURED)
@@ -114,11 +118,11 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     setRemote(value, callback) {
-        super.debug(`setting on remote => ${!!value}`);
+        super.debug(`setting remote => ${!!value}`);
     }
 
     setActive(value, callback) {
-        super.debug(`setting active characteristic => ${value}`);
+        super.debug(`setting active => ${value}`);
 
         this.active = value;
 
@@ -126,27 +130,86 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     getActive(callback) {
-        super.debug(`requesting active characteristic => ${this.active}`);
+        super.debug(`requesting active => ${this.active}`);
 
         callback(null, this.active);
     }
 
     setActiveIdentifier(value, callback) {
-        super.debug(`setting active identifier characteristic => ${value}`);
+        super.debug(`setting active identifier => ${value}`);
+
+        if (this.activeIdentifier && this.activeIdentifier == value) return;
 
         this.activeIdentifier = value;
+
+        this.platform.debug(`switching to input => ${this.input.name}.`);
+
+        let input = this.config.inputs[this.activeIdentifier];
+        let column = input.index % 5;
+        let row = (input.index - column) / 5;
+
+        // await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+
+        // setTimeout(async () => {
+        //     await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+
+        //     setTimeout(async () => {
+        //         for (let i = 0; i < column - 1; i++) {
+        //             await this.device.sendKeyCommand(appletv.AppleTV.Key.Right);
+        //         }
+
+        //         for (let i = 0; i < row; i++) {
+        //             await this.device.sendKeyCommand(appletv.AppleTV.Key.Down);
+        //         }
+
+        //         await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+
+        //         next(null, value);
+        //     }, 1000);
+        // }, 2000);
 
         callback(null);
     }
 
     getActiveIdentifier(callback) {
-        super.debug(`requesting active identifier characteristic => ${this.activeIdentifier}`);
+        super.debug(`requesting active identifier => ${this.activeIdentifier}`);
 
         callback(null, this.activeIdentifier);
     }
 
     onPowerUpdate(value) {
-        this.active = value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE
+        this.active = !!value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE
         this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
+    }
+
+    onNowPlaying(message) {
+        if (message && message.playbackState && message.playbackState.length > 1) {
+            message.playbackState = message.playbackState[0].toUpperCase() + message.playbackState.substring(1).toLowerCase();
+        }
+
+        if (message && message.appBundleIdentifier && this.config.inputs) {
+            let input = this.config.inputs.filter((input) => input.applicationId && input.applicationId === message.appBundleIdentifier);
+
+            if (input && input.length) {
+                input = input[0];
+
+                this.debug(`switching to input => ${input.name}.`);
+
+                this.input = input;
+                this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(this.input.identifier);
+            }
+        }
+
+        this.tvService
+            .getCharacteristic(this.platform.api.hap.Characteristic.CurrentMediaState)
+            .updateValue(
+                message && message.playbackState
+                    ? message.playbackState === "playing"
+                        ? this.platform.api.hap.Characteristic.CurrentMediaState.PLAY
+                        : message.playbackState === "paused"
+                        ? this.platform.api.hap.Characteristic.CurrentMediaState.PAUSE
+                        : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
+                    : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
+            );
     }
 };
