@@ -65,7 +65,7 @@ class Platform {
     }
 
     configureAccessory(accessory) {
-        if (!accessory.context.uid) {
+        if (!accessory.context.uid || accessory.context.version !== 2) {
             try {
                 this.log(`removing orphaned accessory => ${accessory.name || accessory.UUID}.`);
 

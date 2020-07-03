@@ -117,6 +117,8 @@ module.exports = class TelevisionAccessory extends Accessory {
 
     setRemote(value, callback) {
         super.debug(`setting remote => ${!!value}`);
+
+        callback(null);
     }
 
     setActive(value, callback) {
@@ -133,7 +135,7 @@ module.exports = class TelevisionAccessory extends Accessory {
         callback(null, this.active);
     }
 
-    setActiveIdentifier(value, callback) {
+    async setActiveIdentifier(value, callback) {
         super.debug(`setting active identifier => ${value}`);
 
         if (this.activeIdentifier && this.activeIdentifier == value) return;
