@@ -28,7 +28,7 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     createAccessory() {
-        this.instance = this.platform.api.hap.Categories.TELEVISION;
+        this.instance.category = this.platform.api.hap.Categories.TELEVISION;
         this.platform.registerAccessory(this.instance);
         //this.platform.publishExternalAccessory(this.instance);
     }

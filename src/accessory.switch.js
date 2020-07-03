@@ -25,6 +25,7 @@ module.exports = class SwitchAccessory extends Accessory {
     }
 
     createAccessory() {
+        this.instance.category = this.platform.api.hap.Categories.SWITCH;
         this.platform.registerAccessory(this.instance);
     }
 
