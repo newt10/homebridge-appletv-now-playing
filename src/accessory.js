@@ -1,3 +1,4 @@
+const appletv = require("node-appletv-x");
 const lodash = require("lodash");
 
 const AccessoryModel = "Apple TV";
