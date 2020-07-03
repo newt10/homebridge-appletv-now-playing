@@ -47,9 +47,7 @@ module.exports = class SwitchAccessory extends Accessory {
 
         this.on = value;
 
-        super.togglePower(!!this.on);
-
-        callback(null);
+        super.togglePower(!!this.on, () => callback(null));
     }
 
     getOn(callback) {

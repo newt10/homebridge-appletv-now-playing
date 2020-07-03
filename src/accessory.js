@@ -25,6 +25,8 @@ module.exports = class Accessory {
 
         this.configureAccessory();
 
+        this.device.sendIntroduction().then(this.onDeviceMessage);
+
         setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
     }
 
@@ -84,7 +86,7 @@ module.exports = class Accessory {
         this.log(`${this.type} accessory information service configured.`);
     }
 
-    async togglePower(value) {
+    async togglePower(value, callback) {
         this.debug(`toggle power => ${value ? "on" : "off"}.`);
 
         if (!value && this.power) {
@@ -96,6 +98,8 @@ module.exports = class Accessory {
 
         this.onPowerUpdate && this.onPowerUpdate(value);
         this.power = value;
+
+        setTimeout(() => callback(), 5000);
     }
 
     onDeviceMessage(message) {

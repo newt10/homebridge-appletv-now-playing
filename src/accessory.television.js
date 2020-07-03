@@ -108,9 +108,7 @@ module.exports = class TelevisionAccessory extends Accessory {
 
         this.active = value;
 
-        super.togglePower(!!this.active);
-
-        callback(null);
+        super.togglePower(!!this.active, () => callback(null));
     }
 
     getActive(callback) {
