@@ -50,6 +50,9 @@ module.exports = class Accessory {
         this.debug(`configuring ${this.type} accessory.`);
 
         this.uid = this.platform.api.hap.uuid.generate(`${this.device.uid}_apple_tv_${this.type}`);
+
+        this.debug(this.uid);
+
         this.instance = lodash.find(this.platform.accessories, (accessory) => accessory.context.device.uid === this.device.uid);
 
         if (!this.instance) {
