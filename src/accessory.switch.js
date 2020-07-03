@@ -45,7 +45,6 @@ module.exports = class SwitchAccessory extends Accessory {
         super.debug(`setting on characteristic => ${value}`);
 
         this.on = value;
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
 
         callback(null);
     }
@@ -60,7 +59,6 @@ module.exports = class SwitchAccessory extends Accessory {
         super.debug(`setting active characteristic => ${value}`);
 
         this.active = !!value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE;
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
 
         callback(null);
     }

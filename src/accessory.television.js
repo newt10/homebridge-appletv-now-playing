@@ -106,7 +106,6 @@ module.exports = class TelevisionAccessory extends Accessory {
         super.debug(`setting active characteristic => ${value}`);
 
         this.active = value;
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
 
         callback(null);
     }
@@ -121,7 +120,6 @@ module.exports = class TelevisionAccessory extends Accessory {
         super.debug(`setting active identifier characteristic => ${value}`);
 
         this.activeIdentifier = value;
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(this.activeIdentifier);
 
         callback(null);
     }
