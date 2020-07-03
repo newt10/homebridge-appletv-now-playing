@@ -28,7 +28,7 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     configureServices() {
-        super.configureServices.call(this);
+        super.configureServices();
         this.configureTelevisionsService();
     }
 

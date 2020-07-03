@@ -19,7 +19,7 @@ module.exports = class SwitchAccessory extends Accessory {
     }
 
     configureServices() {
-        super.configureServices.call(this);
+        super.configureServices();
         this.configureSwitchService();
     }
 
