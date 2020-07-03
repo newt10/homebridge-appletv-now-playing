@@ -64,18 +64,20 @@ module.exports = class TelevisionAccessory extends Accessory {
                 let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
                 if (inputService) {
+                    super.debug(`removing input service => ${input.name}.`);
+
                     this.instance.removeService(inputService);
                 }
             }
         }
 
         lodash.each(this.config.inputs, (input, index) => {
-            super.debug(`configuring input service for ${input.name}.`);
+            super.debug(`configuring input service => ${input.name}.`);
 
             let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
             if (!inputService) {
-                super.debug(`creating input service for ${input.name}.`);
+                super.debug(`creating input service => ${input.name}.`);
 
                 inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
 
@@ -91,7 +93,7 @@ module.exports = class TelevisionAccessory extends Accessory {
                 .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
                 .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
 
-            super.log(`input service for ${input.name} configured.`);
+            super.log(`input service configured => ${input.name}.`);
         });
 
         this.instance.context.inputs = this.config.inputs;
