@@ -64,8 +64,6 @@ module.exports = class TelevisionAccessory extends Accessory {
 
         this.configureInputServices();
 
-        this.platform.updateAccessory(this.instance);
-
         super.log(`television service configured.`);
     }
 
@@ -141,7 +139,7 @@ module.exports = class TelevisionAccessory extends Accessory {
         if (this.activeIdentifier && this.activeIdentifier == value) return;
 
         this.activeIdentifier = value;
-        
+
         let input = this.config.inputs[this.activeIdentifier];
 
         this.platform.debug(`switching to input => ${input.name}.`);
