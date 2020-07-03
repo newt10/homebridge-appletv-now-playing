@@ -31,11 +31,11 @@ module.exports = class Accessory {
     }
 
     debug(message) {
-        this.platform.debug(`(${this.config.name}) ${message}`);
+        this.platform.debug(`(${this.instance.name}) ${message}`);
     }
 
     log(message) {
-        this.platform.log(`(${this.config.name}) ${message}`);
+        this.platform.log(`(${this.instance.name}) ${message}`);
     }
 
     createAccessory() {
