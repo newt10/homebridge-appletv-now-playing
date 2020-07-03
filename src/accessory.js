@@ -45,7 +45,7 @@ module.exports = class Accessory {
 
         this.debug(this.uid);
 
-        this.instance = lodash.find(this.platform.accessories, (accessory) => accessory.context.device.uid === this.device.uid);
+        this.instance = lodash.find(this.platform.accessories, (accessory) => accessory.context.uid === this.device.uid);
 
         if (!this.instance) {
             this.debug(`creating ${this.type} accessory.`);
