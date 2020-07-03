@@ -95,7 +95,7 @@ module.exports = class Accessory {
     }
 
     onDeviceMessage(message) {
-        this.debug(message);
+        this.debug(JSON.stringify(message));
 
         if (message.payload.logicalDeviceCount) {
             if (message.payload.logicalDeviceCount <= 0) {
