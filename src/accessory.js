@@ -107,14 +107,17 @@ module.exports = class Accessory {
             if (!value && this.power) {
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+
+                this.onPowerUpdate && this.onPowerUpdate(value);
+                this.power = value;
             } else if (value && !this.power) {
                 await this.device.sendKeyPressAndRelease(1, 0x83);
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
                 await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
-            }
 
-            this.onPowerUpdate && this.onPowerUpdate(value);
-            this.power = value;
+                this.onPowerUpdate && this.onPowerUpdate(value);
+                this.power = value;
+            }
 
             setTimeout(() => callback(), 5000);
 
