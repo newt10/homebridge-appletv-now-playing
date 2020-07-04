@@ -25,6 +25,8 @@ module.exports = class Accessory {
         this.type = type;
         this.power = false;
 
+        this.characteristics = require("./characteristics")(platform.api);
+
         this.configureAccessory();
 
         this.device.sendIntroduction().then(this.onDeviceMessage);
