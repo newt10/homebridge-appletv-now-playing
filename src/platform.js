@@ -24,7 +24,7 @@ class Platform {
 
     debug(message) {
         if (this.config && this.config.debug) {
-            if (typeof mesage === "string") {
+            if (typeof message === "string") {
                 message = message.toLowerCase();
             }
 
@@ -33,7 +33,7 @@ class Platform {
     }
 
     log(message) {
-        if (typeof mesage === "string") {
+        if (typeof message === "string") {
             message = message.toLowerCase();
         }
 

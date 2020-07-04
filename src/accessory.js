@@ -22,7 +22,7 @@ module.exports = class Accessory {
         this.config = config;
         this.device = device;
 
-        this.type = type;
+        this.type = type.toLowerCase();
         this.power = false;
 
         this.characteristics = require("./characteristics")(platform.api);
