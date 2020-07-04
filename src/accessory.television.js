@@ -217,11 +217,11 @@ module.exports = class TelevisionAccessory extends Accessory {
                     this.debug(`switching to input => ${input.name}.`);
 
                     this.input = input;
-                    this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(this.input.identifier);
+                    this.service.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(this.input.identifier);
                 }
             }
 
-            this.tvService
+            this.service
                 .getCharacteristic(this.platform.api.hap.Characteristic.CurrentMediaState)
                 .updateValue(
                     message && message.playbackState
