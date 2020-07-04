@@ -90,8 +90,8 @@ module.exports = class TelevisionAccessory {
 
             this.instance
                 .getService(this.platform.api.hap.Service.AccessoryInformation)
-                .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, AccessoryManufacturer)
-                .setCharacteristic(this.platform.api.hap.Characteristic.Model, `${AccessoryModel} ${this.type}`)
+                .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, "Apple")
+                .setCharacteristic(this.platform.api.hap.Characteristic.Model, "Apple TV")
                 .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, `${this.device.uid}-${this.type}`)
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, `${this.config.name} ${this.type}`);
 
