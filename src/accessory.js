@@ -129,7 +129,7 @@ module.exports = class Accessory {
 
     onDeviceMessage(message) {
         try {
-            super.log(JSON.stringify(message));
+            this.log(JSON.stringify(message));
             let power = false;
 
             if (message.payload.logicalDeviceCount) {
