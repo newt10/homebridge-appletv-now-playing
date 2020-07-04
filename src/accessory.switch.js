@@ -51,7 +51,7 @@ module.exports = class SwitchAccessory {
             this.uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}.accessory`);
             this.instance = lodash.find(
                 this.platform.accessories,
-                (accessory) => accessory.context.uid === this.device.uid && accessory.category === this.platform.api.hap.Categories.SWITCH
+                (accessory) => accessory.context.uid === this.device.uid && accessory.context.category === this.platform.api.hap.Categories.SWITCH
             );
 
             let update = true;
@@ -68,6 +68,7 @@ module.exports = class SwitchAccessory {
             this.instance.category = this.platform.api.hap.Categories.SWITCH;
             this.instance.displayName = `${this.config.name} ${this.type}`;
             this.instance.name = `${this.config.name} ${this.type}`;
+            this.instance.context.category = this.platform.api.hap.Categories.SWITCH;
             this.instance.context.uid = this.device.uid;
             this.instance.context.version = 2;
 

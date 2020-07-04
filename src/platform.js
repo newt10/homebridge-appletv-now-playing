@@ -1,3 +1,4 @@
+const lodash = require("lodash");
 const appletv = require("node-appletv-x");
 
 const SwitchAccessory = require("./accessory.switch");
@@ -116,6 +117,15 @@ class Platform {
 
                 if (this.config.devices[0].showTvAccessory) {
                     new TelevisionAccessory(this, this.config.devices[0], connectedDevice);
+                } else {
+                    let accessory = lodash.find(
+                        this.accessories,
+                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.platform.api.hap.Categories.TELEVISION
+                    );
+
+                    if(!accessory) {
+                        this.unregisterAccessory(accessory);
+                    }
                 }
             }
         } catch (error) {
