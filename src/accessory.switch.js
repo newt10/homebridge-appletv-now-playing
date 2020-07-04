@@ -56,7 +56,7 @@ module.exports = class SwitchAccessory extends Accessory {
 
             super.log(`switch service configured.`);
         } catch (error) {
-            this.log(`unable to configure switch service => ${error}`);
+            super.log(`unable to configure switch service => ${error}`);
         }
     }
 
@@ -68,7 +68,7 @@ module.exports = class SwitchAccessory extends Accessory {
 
             super.togglePower(!!this.on, () => callback(null));
         } catch (error) {
-            this.log(`unable to set on status => ${error}`);
+            super.log(`unable to set on status => ${error}`);
         }
     }
 
@@ -97,7 +97,7 @@ module.exports = class SwitchAccessory extends Accessory {
             this.on = !!value;
             this.service.getCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.on);
         } catch (error) {
-            this.log(`unable to update power status => ${error}`);
+            super.log(`unable to update power status => ${error}`);
         }
     }
 
@@ -118,7 +118,7 @@ module.exports = class SwitchAccessory extends Accessory {
             this.service.getCharacteristic(this.characteristics.Duration).updateValue(message && message.duration > 0 ? Math.round(message.duration) : "-");
             this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(message && message.playbackState === "Playing");
         } catch (error) {
-            this.log(`unable to update now playing status => ${error}`);
+            super.log(`unable to update now playing status => ${error}`);
         }
     }
 };

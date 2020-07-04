@@ -66,7 +66,7 @@ module.exports = class TelevisionAccessory extends Accessory {
 
             super.log(`television service configured.`);
         } catch (error) {
-            this.log(`unable to configure television service => ${error}`);
+            super.log(`unable to configure television service => ${error}`);
         }
     }
 
@@ -114,7 +114,7 @@ module.exports = class TelevisionAccessory extends Accessory {
 
                     super.log(`input service configured => ${input.name}.`);
                 } catch (error) {
-                    this.log(`unable create input service => ${input.name} => ${error}`);
+                    super.log(`unable create input service => ${input.name} => ${error}`);
                 }
             });
 
@@ -122,7 +122,7 @@ module.exports = class TelevisionAccessory extends Accessory {
 
             super.log(`input services configured.`);
         } catch (error) {
-            this.log(`unable to configure input service => ${error}`);
+            super.log(`unable to configure input service => ${error}`);
         }
     }
 
@@ -181,7 +181,7 @@ module.exports = class TelevisionAccessory extends Accessory {
                 }, 1000);
             }, 2000);
         } catch (error) {
-            this.log(`unable to set active identifier status => ${error}`);
+            super.log(`unable to set active identifier status => ${error}`);
         }
     }
 
@@ -196,7 +196,7 @@ module.exports = class TelevisionAccessory extends Accessory {
             this.active = !!value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE;
             this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
         } catch (error) {
-            this.log(`unable to update power status => ${error}`);
+            super.log(`unable to update power status => ${error}`);
         }
     }
 
@@ -231,7 +231,7 @@ module.exports = class TelevisionAccessory extends Accessory {
                         : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
                 );
         } catch (error) {
-            this.log(`unable to update now playing status => ${error}`);
+            super.log(`unable to update now playing status => ${error}`);
         }
     }
 };
