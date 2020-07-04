@@ -1,5 +1,6 @@
 const Platform = require("./platform");
 
+const lodash = require("lodash");
 const appletv = require("node-appletv-x");
 
 module.exports = class SwitchAccessory {
