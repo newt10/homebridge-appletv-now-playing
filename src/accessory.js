@@ -130,10 +130,9 @@ module.exports = class Accessory {
     onDeviceMessage(message) {
         try {
             if (message.payload) {
-                this.log(message.payload.logicalDeviceCount);
-                let power = false;
-
                 if (message.payload.logicalDeviceCount) {
+                    let power = false;
+
                     if (message.payload.logicalDeviceCount <= 0) {
                         power = false;
                     }
@@ -141,17 +140,17 @@ module.exports = class Accessory {
                     if (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive) {
                         power = true;
                     }
+
+                    if (this.power === power) {
+                        return;
+                    }
+
+                    this.power = power;
+
+                    this.onPowerUpdate && this.onPowerUpdate(this.power);
+
+                    this.debug(`power status update => ${this.power ? "on" : "off"}.`);
                 }
-
-                if (this.power === power) {
-                    return;
-                }
-
-                this.power = power;
-
-                this.onPowerUpdate && this.onPowerUpdate(this.power);
-
-                this.debug(`power status update => ${this.power ? "on" : "off"}.`);
             }
         } catch (error) {
             this.log(`unable to update power status => ${error}`);
