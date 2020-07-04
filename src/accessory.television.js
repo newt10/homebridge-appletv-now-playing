@@ -31,7 +31,6 @@ module.exports = class TelevisionAccessory extends Accessory {
 
     createAccessory() {
         this.instance.category = this.platform.api.hap.Categories.TELEVISION;
-        // this.platform.registerAccessory(this.instance);
         this.platform.publishExternalAccessory(this.instance);
     }
 
@@ -45,84 +44,96 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     configureTelevisionService() {
-        super.debug(`configuring television service.`);
+        try {
+            super.debug(`configuring television service.`);
 
-        this.service = this.instance.getService(this.platform.api.hap.Service.Television);
+            this.service = this.instance.getService(this.platform.api.hap.Service.Television);
 
-        if (!this.service) {
-            super.debug(`creating television service.`);
+            if (!this.service) {
+                super.debug(`creating television service.`);
 
-            this.service = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
+                this.service = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
+            }
+
+            this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getActive).on("set", this.setActive);
+            this.service.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
+            this.service.getCharacteristic(this.platform.api.hap.Characteristic.RemoteKey).on("set", this.setRemote);
+
+            this.service.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
+            this.service.setCharacteristic(this.platform.api.hap.Characteristic.SleepDiscoveryMode, this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
+
+            this.configureInputServices();
+
+            super.log(`television service configured.`);
+        } catch (error) {
+            this.log(`unable to configure television service => ${error}`);
         }
-
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).on("get", this.getActive).on("set", this.setActive);
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).on("get", this.getActiveIdentifier).on("set", this.setActiveIdentifier);
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.RemoteKey).on("set", this.setRemote);
-
-        this.service.setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, `${this.config.name} Television`);
-        this.service.setCharacteristic(this.platform.api.hap.Characteristic.SleepDiscoveryMode, this.platform.api.hap.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-
-        this.configureInputServices();
-
-        super.log(`television service configured.`);
     }
 
     configureInputServices() {
-        super.debug(`configuring input services.`);
+        try {
+            super.debug(`configuring input services.`);
 
-        if (this.instance.context.inputs && this.config.inputs.length < this.instance.context.inputs.length) {
-            for (let index = this.config.inputs.length; index < this.instance.context.inputs.length; index++) {
-                let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
+            if (this.instance.context.inputs && this.config.inputs.length < this.instance.context.inputs.length) {
+                for (let index = this.config.inputs.length; index < this.instance.context.inputs.length; index++) {
+                    let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
-                if (inputService) {
-                    super.debug(`removing input service => ${index}.`);
+                    if (inputService) {
+                        super.debug(`removing input service => ${index}.`);
 
-                    this.service.removeLinkedService(inputService);
-                    this.instance.removeService(inputService);
+                        this.service.removeLinkedService(inputService);
+                        this.instance.removeService(inputService);
+                    }
                 }
             }
+
+            lodash.each(this.config.inputs, (input, index) => {
+                try {
+                    super.debug(`configuring input service => ${input.name}.`);
+
+                    let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
+
+                    if (!inputService) {
+                        super.debug(`creating input service => ${input.name}.`);
+
+                        inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
+
+                        this.service.addLinkedService(inputService);
+                        this.instance.addService(inputService, true);
+                    }
+
+                    input.identifier = index;
+
+                    inputService
+                        .setCharacteristic(this.platform.api.hap.Characteristic.Identifier, index)
+                        .setCharacteristic(this.platform.api.hap.Characteristic.IsConfigured, this.platform.api.hap.Characteristic.IsConfigured.CONFIGURED)
+                        .setCharacteristic(this.platform.api.hap.Characteristic.InputSourceType, this.platform.api.hap.Characteristic.InputSourceType.APPLICATION)
+                        .setCharacteristic(this.platform.api.hap.Characteristic.Name, input.name)
+                        .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
+                        .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
+
+                    super.log(`input service configured => ${input.name}.`);
+                } catch (error) {
+                    this.log(`unable create input service => ${input.name} => ${error}`);
+                }
+            });
+
+            this.instance.context.inputs = this.config.inputs;
+
+            super.log(`input services configured.`);
+        } catch (error) {
+            this.log(`unable to configure input service => ${error}`);
         }
-
-        lodash.each(this.config.inputs, (input, index) => {
-            super.debug(`configuring input service => ${input.name}.`);
-
-            let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
-
-            if (!inputService) {
-                super.debug(`creating input service => ${input.name}.`);
-
-                inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
-
-                this.service.addLinkedService(inputService);
-                this.instance.addService(inputService, true);
-            }
-
-            input.identifier = index;
-
-            inputService
-                .setCharacteristic(this.platform.api.hap.Characteristic.Identifier, index)
-                .setCharacteristic(this.platform.api.hap.Characteristic.IsConfigured, this.platform.api.hap.Characteristic.IsConfigured.CONFIGURED)
-                .setCharacteristic(this.platform.api.hap.Characteristic.InputSourceType, this.platform.api.hap.Characteristic.InputSourceType.APPLICATION)
-                .setCharacteristic(this.platform.api.hap.Characteristic.Name, input.name)
-                .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
-                .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
-
-            super.log(`input service configured => ${input.name}.`);
-        });
-
-        this.instance.context.inputs = this.config.inputs;
-
-        super.log(`input services configured.`);
     }
 
     setRemote(value, callback) {
-        super.debug(`setting remote => ${!!value}`);
+        super.debug(`setting remote status => ${!!value}`);
 
         callback(null);
     }
 
     setActive(value, callback) {
-        super.debug(`setting active => ${value}`);
+        super.debug(`setting active status => ${value}`);
 
         this.active = value;
 
@@ -130,85 +141,97 @@ module.exports = class TelevisionAccessory extends Accessory {
     }
 
     getActive(callback) {
-        super.debug(`requesting active => ${this.active}`);
+        super.debug(`requesting active status => ${this.active}`);
 
         callback(null, this.active);
     }
 
     async setActiveIdentifier(value, callback) {
-        super.debug(`setting active identifier => ${value}`);
+        try {
+            super.debug(`setting active identifier status => ${value}`);
 
-        if (this.activeIdentifier && this.activeIdentifier == value) return;
+            if (this.activeIdentifier && this.activeIdentifier == value) return;
 
-        this.activeIdentifier = value;
+            this.activeIdentifier = value;
 
-        let input = this.config.inputs[this.activeIdentifier];
+            let input = this.config.inputs[this.activeIdentifier];
 
-        this.platform.debug(`switching to input => ${input.name}.`);
+            this.platform.debug(`switching to input => ${input.name}.`);
 
-        let column = input.index % 5;
-        let row = (input.index - column) / 5;
+            let column = input.index % 5;
+            let row = (input.index - column) / 5;
 
-        await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
-
-        setTimeout(async () => {
             await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
 
             setTimeout(async () => {
-                for (let i = 0; i < column - 1; i++) {
-                    await this.device.sendKeyCommand(appletv.AppleTV.Key.Right);
-                }
+                await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
 
-                for (let i = 0; i < row; i++) {
-                    await this.device.sendKeyCommand(appletv.AppleTV.Key.Down);
-                }
+                setTimeout(async () => {
+                    for (let i = 0; i < column - 1; i++) {
+                        await this.device.sendKeyCommand(appletv.AppleTV.Key.Right);
+                    }
 
-                await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+                    for (let i = 0; i < row; i++) {
+                        await this.device.sendKeyCommand(appletv.AppleTV.Key.Down);
+                    }
 
-                callback(null);
-            }, 1000);
-        }, 2000);
+                    await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+
+                    callback(null);
+                }, 1000);
+            }, 2000);
+        } catch (error) {
+            this.log(`unable to set active identifier status => ${error}`);
+        }
     }
 
     getActiveIdentifier(callback) {
-        super.debug(`requesting active identifier => ${this.activeIdentifier}`);
+        super.debug(`requesting active identifier status => ${this.activeIdentifier}`);
 
         callback(null, this.activeIdentifier);
     }
 
     onPowerUpdate(value) {
-        this.active = !!value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE
-        this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
+        try {
+            this.active = !!value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE;
+            this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
+        } catch (error) {
+            this.log(`unable to update power status => ${error}`);
+        }
     }
 
     onNowPlaying(message) {
-        if (message && message.playbackState && message.playbackState.length > 1) {
-            message.playbackState = message.playbackState[0].toUpperCase() + message.playbackState.substring(1).toLowerCase();
-        }
-
-        if (message && message.appBundleIdentifier && this.config.inputs) {
-            let input = this.config.inputs.filter((input) => input.applicationId && input.applicationId === message.appBundleIdentifier);
-
-            if (input && input.length) {
-                input = input[0];
-
-                this.debug(`switching to input => ${input.name}.`);
-
-                this.input = input;
-                this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(this.input.identifier);
+        try {
+            if (message && message.playbackState && message.playbackState.length > 1) {
+                message.playbackState = message.playbackState[0].toUpperCase() + message.playbackState.substring(1).toLowerCase();
             }
-        }
 
-        this.tvService
-            .getCharacteristic(this.platform.api.hap.Characteristic.CurrentMediaState)
-            .updateValue(
-                message && message.playbackState
-                    ? message.playbackState === "playing"
-                        ? this.platform.api.hap.Characteristic.CurrentMediaState.PLAY
-                        : message.playbackState === "paused"
-                        ? this.platform.api.hap.Characteristic.CurrentMediaState.PAUSE
+            if (message && message.appBundleIdentifier && this.config.inputs) {
+                let input = this.config.inputs.filter((input) => input.applicationId && input.applicationId === message.appBundleIdentifier);
+
+                if (input && input.length) {
+                    input = input[0];
+
+                    this.debug(`switching to input => ${input.name}.`);
+
+                    this.input = input;
+                    this.tvService.getCharacteristic(this.platform.api.hap.Characteristic.ActiveIdentifier).updateValue(this.input.identifier);
+                }
+            }
+
+            this.tvService
+                .getCharacteristic(this.platform.api.hap.Characteristic.CurrentMediaState)
+                .updateValue(
+                    message && message.playbackState
+                        ? message.playbackState === "playing"
+                            ? this.platform.api.hap.Characteristic.CurrentMediaState.PLAY
+                            : message.playbackState === "paused"
+                            ? this.platform.api.hap.Characteristic.CurrentMediaState.PAUSE
+                            : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
                         : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
-                    : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
-            );
+                );
+        } catch (error) {
+            this.log(`unable to update now playing status => ${error}`);
+        }
     }
 };

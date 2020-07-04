@@ -43,35 +43,51 @@ class Platform {
     registerAccessory(accessory) {
         this.log(`registering accessory => ${accessory.name || accessory.UUID}.`);
 
-        this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+        try {
+            this.api.registerPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+        } catch (error) {
+            this.log(`unable to register accessory => ${error}`);
+        }
     }
 
     unregisterAccessory(accessory) {
         this.log(`unregistering accessory => ${accessory.name || accessory.UUID}.`);
 
-        this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
-    };
+        try {
+            this.api.unregisterPlatformAccessories(Platform.pluginName, Platform.platformName, [accessory]);
+        } catch (error) {
+            this.log(`unable to unregister accessory => ${error}`);
+        }
+    }
 
     publishExternalAccessory(accessory) {
         this.log(`publishing external accessory => ${accessory.name || accessory.UUID}.`);
 
-        this.api.publishExternalAccessories(Platform.pluginName, [accessory]);
+        try {
+            this.api.publishExternalAccessories(Platform.pluginName, [accessory]);
+        } catch (error) {
+            this.log(`unable to publish external accessory => ${error}`);
+        }
     }
 
     updateAccessory(accessory) {
         this.log(`updating accessory => ${accessory.name || accessory.UUID}.`);
 
-        this.api.updatePlatformAccessories([accessory]);
+        try {
+            this.api.updatePlatformAccessories([accessory]);
+        } catch (error) {
+            this.log(`unable to update accessory => ${error}`);
+        }
     }
 
     configureAccessory(accessory) {
         if (!accessory.context.uid || accessory.context.version !== 2) {
-            try {
-                this.log(`removing orphaned accessory => ${accessory.name || accessory.UUID}.`);
+            this.log(`removing orphaned accessory => ${accessory.name || accessory.UUID}.`);
 
+            try {
                 this.unregisterAccessory(accessory);
             } catch (error) {
-                this.log(error);
+                this.log(`unable to unregister accessory => ${error}`);
             }
         } else {
             this.log(`loaded cached accessory => ${accessory.name || accessory.UUID}.`);
@@ -81,25 +97,29 @@ class Platform {
     }
 
     async configureDevice(deviceConfiguration) {
-        let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
+        try {
+            let credentials = appletv.parseCredentials(deviceConfiguration.credentials);
 
-        this.debug(`(${deviceConfiguration.name}) scanning for device => ${credentials.uniqueIdentifier}.`);
+            this.debug(`(${deviceConfiguration.name}) scanning for device => ${credentials.uniqueIdentifier}.`);
 
-        let devices = await appletv.scan(credentials.uniqueIdentifier);
+            let devices = await appletv.scan(credentials.uniqueIdentifier);
 
-        if (devices && devices.length) {
-            this.debug(`(${deviceConfiguration.name}) device found => ${credentials.uniqueIdentifier}.`);
-            this.debug(`(${deviceConfiguration.name}) connecting to device => ${credentials.uniqueIdentifier}.`);
+            if (devices && devices.length) {
+                this.debug(`(${deviceConfiguration.name}) device found => ${credentials.uniqueIdentifier}.`);
+                this.debug(`(${deviceConfiguration.name}) connecting to device => ${credentials.uniqueIdentifier}.`);
 
-            let connectedDevice = await devices[0].openConnection(credentials);
+                let connectedDevice = await devices[0].openConnection(credentials);
 
-            this.debug(`(${deviceConfiguration.name}) connected to device => ${credentials.uniqueIdentifier}.`);
+                this.debug(`(${deviceConfiguration.name}) connected to device => ${credentials.uniqueIdentifier}.`);
 
-            new SwitchAccessory(this, this.config.devices[0], connectedDevice);
+                new SwitchAccessory(this, this.config.devices[0], connectedDevice);
 
-            if (this.config.devices[0].showTvAccessory) {
-                new TelevisionAccessory(this, this.config.devices[0], connectedDevice);
+                if (this.config.devices[0].showTvAccessory) {
+                    new TelevisionAccessory(this, this.config.devices[0], connectedDevice);
+                }
             }
+        } catch (error) {
+            this.log(`unable to configure device => ${error}`);
         }
     }
 
