@@ -26,9 +26,8 @@ module.exports = class SwitchAccessory {
         this.on = false;
         this.active = this.platform.api.hap.Characteristic.Active.INACTIVE;
 
-        this.configureServices();
+        this.configureAccessory();
 
-        this.instance.category = this.platform.api.hap.Categories.SWITCH;
         this.device.on("nowPlaying", this.onNowPlaying);
     }
 
@@ -58,6 +57,7 @@ module.exports = class SwitchAccessory {
                 update = false;
             }
 
+            this.instance.category = this.platform.api.hap.Categories.SWITCH;
             this.instance.displayName = `${this.config.name} ${this.type}`;
             this.instance.name = `${this.config.name} ${this.type}`;
             this.instance.context.uid = this.device.uid;
@@ -66,6 +66,8 @@ module.exports = class SwitchAccessory {
             if (update) {
                 this.platform.updateAccessory(this.instance);
             }
+
+            this.configureServices();
 
             this.device.on("message", this.onDeviceMessage);
 

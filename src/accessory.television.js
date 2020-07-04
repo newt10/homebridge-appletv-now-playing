@@ -30,9 +30,8 @@ module.exports = class TelevisionAccessory {
         this.active = false;
         this.activeIdentifier = 0;
 
-        this.configureServices();
+        this.configureAccessory();
 
-        this.instance.category = this.platform.api.hap.Categories.TELEVISION;
         this.device.on("nowPlaying", this.onNowPlaying);
     }
 
@@ -62,6 +61,7 @@ module.exports = class TelevisionAccessory {
                 //update = false;
             }
 
+            this.instance.category = this.platform.api.hap.Categories.TELEVISION;
             this.instance.displayName = `${this.config.name} ${this.type}`;
             this.instance.name = `${this.config.name} ${this.type}`;
             this.instance.context.uid = this.device.uid;
@@ -70,6 +70,8 @@ module.exports = class TelevisionAccessory {
             // if (update) {
             //     this.updateAccessory(this.instance);
             // }
+
+            this.configureServices();
 
             this.device.on("message", this.onDeviceMessage);
 
