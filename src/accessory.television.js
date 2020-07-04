@@ -38,7 +38,7 @@ module.exports = class TelevisionAccessory extends Accessory {
 
     updateAccessory() {
         //this.platform.updateAccessory(this.instance);
-        this.platform.publishExternalAccessory(this.instance);
+        //this.platform.publishExternalAccessory(this.instance);
     }
 
     configureServices() {
