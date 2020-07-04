@@ -1,3 +1,7 @@
+const Platform = require("./platform");
+
+const appletv = require("node-appletv-x");
+
 module.exports = class SwitchAccessory {
     constructor(platform, config, device) {
         this.type = "Switch";
