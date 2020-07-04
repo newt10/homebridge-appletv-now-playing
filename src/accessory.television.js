@@ -1,11 +1,8 @@
 const lodash = require("lodash");
-const Accessory = require("./accessory");
 
-module.exports = class TelevisionAccessory extends Accessory {
-    static Type = "Television";
-
+module.exports = class TelevisionAccessory {
     constructor(platform, config, device) {
-        super(TelevisionAccessory.Type, platform, config, device);
+        this.type = "Television";
 
         this.createAccessory = this.createAccessory.bind(this);
         this.updateAccessory = this.updateAccessory.bind(this);
@@ -19,9 +16,18 @@ module.exports = class TelevisionAccessory extends Accessory {
         this.getActive = this.getActive.bind(this);
         this.setActiveIdentifier = this.setActiveIdentifier.bind(this);
         this.getActiveIdentifier = this.getActiveIdentifier.bind(this);
+        this.togglePower = this.togglePower.bind(this);
 
+        this.onDeviceMessage = this.onDeviceMessage.bind(this);
         this.onPowerUpdate = this.onPowerUpdate.bind(this);
         this.onNowPlaying = this.onNowPlaying.bind(this);
+
+        this.log = this.log.bind(this);
+        this.debug = this.debug.bind(this);
+
+        this.platform = platform;
+        this.config = config;
+        this.device = device;
 
         this.active = false;
         this.activeIdentifier = 0;
@@ -32,28 +38,76 @@ module.exports = class TelevisionAccessory extends Accessory {
         this.device.on("nowPlaying", this.onNowPlaying);
     }
 
-    createAccessory() {
-        this.platform.publishExternalAccessory(this.instance);
+    debug(message) {
+        this.platform.debug(`(${this.config.name} ${this.type}) ${message}`);
     }
 
-    updateAccessory() {
-        //this.platform.updateAccessory(this.instance);
-        //this.platform.publishExternalAccessory(this.instance);
+    log(message) {
+        this.platform.log(`(${this.config.name} ${this.type}) ${message}`);
+    }
+
+    configureAccessory() {
+        try {
+            this.debug(`configuring ${this.type} accessory.`);
+
+            this.uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}.accessory`);
+            this.instance = lodash.find(this.platform.accessories, (accessory) => accessory.context.uid === this.device.uid);
+
+            //let update = true;
+
+            if (!this.instance) {
+                this.debug(`creating ${this.type} accessory.`);
+
+                this.instance = new this.platform.api.platformAccessory(`${this.config.name} ${this.type}`, this.uid);
+                this.platform.publishExternalAccessory(this.instance);
+
+                //update = false;
+            }
+
+            this.instance.displayName = `${this.config.name} ${this.type}`;
+            this.instance.name = `${this.config.name} ${this.type}`;
+            this.instance.context.uid = this.device.uid;
+            this.instance.context.version = 2;
+
+            // if (update) {
+            //     this.updateAccessory(this.instance);
+            // }
+
+            this.device.on("message", this.onDeviceMessage);
+
+            this.log(`accessory configured.`);
+        } catch (error) {
+            this.log(`unable to configure accessory => ${error}`);
+        }
     }
 
     configureServices() {
-        super.configureServices();
-        this.configureTelevisionService();
+        try {
+            this.debug(`configuring ${this.type} accessory information service.`);
+
+            this.instance
+                .getService(this.platform.api.hap.Service.AccessoryInformation)
+                .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, AccessoryManufacturer)
+                .setCharacteristic(this.platform.api.hap.Characteristic.Model, `${AccessoryModel} ${this.type}`)
+                .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, `${this.device.uid}-${this.type}`)
+                .setCharacteristic(this.platform.api.hap.Characteristic.Name, `${this.config.name} ${this.type}`);
+
+            this.configureTelevisionService();
+
+            this.log(`${this.type} accessory information service configured.`);
+        } catch (error) {
+            this.log(`unable to configure accessory information service => ${error}`);
+        }
     }
 
     configureTelevisionService() {
         try {
-            super.debug(`configuring television service.`);
+            this.debug(`configuring television service.`);
 
             this.service = this.instance.getService(this.platform.api.hap.Service.Television);
 
             if (!this.service) {
-                super.debug(`creating television service.`);
+                this.debug(`creating television service.`);
 
                 this.service = this.instance.addService(this.platform.api.hap.Service.Television, `${this.config.name} Television`, `${this.uid}_television`);
             }
@@ -67,22 +121,22 @@ module.exports = class TelevisionAccessory extends Accessory {
 
             this.configureInputServices();
 
-            super.log(`television service configured.`);
+            this.log(`television service configured.`);
         } catch (error) {
-            super.log(`unable to configure television service => ${error}`);
+            this.log(`unable to configure television service => ${error}`);
         }
     }
 
     configureInputServices() {
         try {
-            super.debug(`configuring input services.`);
+            this.debug(`configuring input services.`);
 
             if (this.instance.context.inputs && this.config.inputs.length < this.instance.context.inputs.length) {
                 for (let index = this.config.inputs.length; index < this.instance.context.inputs.length; index++) {
                     let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
                     if (inputService) {
-                        super.debug(`removing input service => ${index}.`);
+                        this.debug(`removing input service => ${index}.`);
 
                         this.service.removeLinkedService(inputService);
                         this.instance.removeService(inputService);
@@ -92,12 +146,12 @@ module.exports = class TelevisionAccessory extends Accessory {
 
             lodash.each(this.config.inputs, (input, index) => {
                 try {
-                    super.debug(`configuring input service => ${input.name}.`);
+                    this.debug(`configuring input service => ${input.name}.`);
 
                     let inputService = this.instance.getServiceByUUIDAndSubType(this.platform.api.hap.Service.InputSource, `${this.device.uid}_apple_tv_input_${index}`);
 
                     if (!inputService) {
-                        super.debug(`creating input service => ${input.name}.`);
+                        this.debug(`creating input service => ${input.name}.`);
 
                         inputService = new this.platform.api.hap.Service.InputSource(input.name, `${this.device.uid}_apple_tv_input_${index}`);
 
@@ -115,43 +169,72 @@ module.exports = class TelevisionAccessory extends Accessory {
                         .setCharacteristic(this.platform.api.hap.Characteristic.ConfiguredName, input.name)
                         .setCharacteristic(this.platform.api.hap.Characteristic.CurrentVisibilityState, this.platform.api.hap.Characteristic.CurrentVisibilityState.SHOWN);
 
-                    super.log(`input service configured => ${input.name}.`);
+                    this.log(`input service configured => ${input.name}.`);
                 } catch (error) {
-                    super.log(`unable create input service => ${input.name} => ${error}`);
+                    this.log(`unable create input service => ${input.name} => ${error}`);
                 }
             });
 
             this.instance.context.inputs = this.config.inputs;
 
-            super.log(`input services configured.`);
+            this.log(`input services configured.`);
         } catch (error) {
-            super.log(`unable to configure input service => ${error}`);
+            this.log(`unable to configure input service => ${error}`);
+        }
+    }
+
+    async togglePower(value, callback) {
+        try {
+            clearInterval(this.deviceInfoTimer);
+
+            this.debug(`toggle power => ${value ? "on" : "off"}.`);
+
+            if (!value && this.power) {
+                await this.device.sendKeyCommand(appletv.AppleTV.Key.LongTv);
+                await this.device.sendKeyCommand(appletv.AppleTV.Key.Select);
+
+                this.onPowerUpdate && this.onPowerUpdate(value);
+                this.power = value;
+            } else if (value && !this.power) {
+                await this.device.sendKeyPressAndRelease(1, 0x83);
+                await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+                await this.device.sendKeyCommand(appletv.AppleTV.Key.Tv);
+
+                this.onPowerUpdate && this.onPowerUpdate(value);
+                this.power = value;
+            }
+
+            setTimeout(() => callback(), 5000);
+
+            this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
+        } catch (error) {
+            this.log(`unable to toggle power status => ${error}`);
         }
     }
 
     setRemote(value, callback) {
-        super.debug(`setting remote status => ${!!value}`);
+        this.debug(`setting remote status => ${!!value}`);
 
         callback(null);
     }
 
     setActive(value, callback) {
-        super.debug(`setting active status => ${value}`);
+        this.debug(`setting active status => ${value}`);
 
         this.active = value;
 
-        super.togglePower(!!this.active, () => callback(null));
+        this.togglePower(!!this.active, () => callback(null));
     }
 
     getActive(callback) {
-        super.debug(`requesting active status => ${this.active}`);
+        this.debug(`requesting active status => ${this.active}`);
 
         callback(null, this.active);
     }
 
     async setActiveIdentifier(value, callback) {
         try {
-            super.debug(`setting active identifier status => ${value}`);
+            this.debug(`setting active identifier status => ${value}`);
 
             if (this.activeIdentifier && this.activeIdentifier == value) return;
 
@@ -184,12 +267,12 @@ module.exports = class TelevisionAccessory extends Accessory {
                 }, 1000);
             }, 2000);
         } catch (error) {
-            super.log(`unable to set active identifier status => ${error}`);
+            this.log(`unable to set active identifier status => ${error}`);
         }
     }
 
     getActiveIdentifier(callback) {
-        super.debug(`requesting active identifier status => ${this.activeIdentifier}`);
+        this.debug(`requesting active identifier status => ${this.activeIdentifier}`);
 
         callback(null, this.activeIdentifier);
     }
@@ -199,7 +282,7 @@ module.exports = class TelevisionAccessory extends Accessory {
             this.active = !!value ? this.platform.api.hap.Characteristic.Active.ACTIVE : this.platform.api.hap.Characteristic.Active.INACTIVE;
             this.service.getCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.active);
         } catch (error) {
-            super.log(`unable to update power status => ${error}`);
+            this.log(`unable to update power status => ${error}`);
         }
     }
 
@@ -234,7 +317,37 @@ module.exports = class TelevisionAccessory extends Accessory {
                         : this.platform.api.hap.Characteristic.CurrentMediaState.STOP
                 );
         } catch (error) {
-            super.log(`unable to update now playing status => ${error}`);
+            this.log(`unable to update now playing status => ${error}`);
+        }
+    }
+
+    onDeviceMessage(message) {
+        try {
+            if (message.payload) {
+                if (message.payload.logicalDeviceCount) {
+                    let power = false;
+
+                    if (message.payload.logicalDeviceCount <= 0) {
+                        power = false;
+                    }
+
+                    if (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive) {
+                        power = true;
+                    }
+
+                    if (this.power === power) {
+                        return;
+                    }
+
+                    this.power = power;
+
+                    this.onPowerUpdate && this.onPowerUpdate(this.power);
+
+                    this.debug(`power status update => ${this.power ? "on" : "off"}.`);
+                }
+            }
+        } catch (error) {
+            this.log(`unable to update power status => ${error}`);
         }
     }
 };
