@@ -48,7 +48,7 @@ module.exports = class SwitchAccessory {
         try {
             this.debug(`configuring ${this.type} accessory.`);
 
-            this.uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}.accessory`);
+            this.uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}`);
             this.instance = lodash.find(
                 this.platform.accessories,
                 (accessory) => accessory.context.uid === this.device.uid && accessory.context.category === this.platform.api.hap.Categories.SWITCH
@@ -97,7 +97,7 @@ module.exports = class SwitchAccessory {
                 .getService(this.platform.api.hap.Service.AccessoryInformation)
                 .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, "Apple")
                 .setCharacteristic(this.platform.api.hap.Characteristic.Model, "Apple TV")
-                .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, `TV${this.device.uid.substring(0, 5)}`)
+                .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, `SW${this.device.uid.substring(0, 5)}`)
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, `${this.config.name} ${this.type}`);
 
             this.configureSwitchService();
