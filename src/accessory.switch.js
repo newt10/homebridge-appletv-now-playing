@@ -96,7 +96,7 @@ module.exports = class SwitchAccessory {
                 .getService(this.platform.api.hap.Service.AccessoryInformation)
                 .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, "Apple")
                 .setCharacteristic(this.platform.api.hap.Characteristic.Model, "Apple TV")
-                .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, `TV${this.device.uid.substring(5)}`)
+                .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, `TV${this.device.uid.substring(0, 5)}`)
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, `${this.config.name} ${this.type}`);
 
             this.configureSwitchService();
