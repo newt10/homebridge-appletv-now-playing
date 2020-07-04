@@ -27,10 +27,12 @@ module.exports = class TelevisionAccessory extends Accessory {
         this.activeIdentifier = 0;
 
         this.configureServices();
+
+        this.instance.category = this.platform.api.hap.Categories.TELEVISION;
+        this.device.on("nowPlaying", this.onNowPlaying);
     }
 
     createAccessory() {
-        this.instance.category = this.platform.api.hap.Categories.TELEVISION;
         this.platform.publishExternalAccessory(this.instance);
     }
 

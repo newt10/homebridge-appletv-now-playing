@@ -72,7 +72,6 @@ module.exports = class Accessory {
             }
 
             this.device.on("message", this.onDeviceMessage);
-            this.device.on("nowPlaying", this.onNowPlaying);
 
             this.log(`accessory configured.`);
         } catch (error) {

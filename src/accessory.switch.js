@@ -24,10 +24,12 @@ module.exports = class SwitchAccessory extends Accessory {
         this.active = this.platform.api.hap.Characteristic.Active.INACTIVE;
 
         this.configureServices();
+
+        this.instance.category = this.platform.api.hap.Categories.SWITCH;
+        this.device.on("nowPlaying", this.onNowPlaying);
     }
 
     createAccessory() {
-        this.instance.category = this.platform.api.hap.Categories.SWITCH;
         this.platform.registerAccessory(this.instance);
     }
 
