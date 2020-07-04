@@ -75,6 +75,9 @@ module.exports = class SwitchAccessory {
             this.configureServices();
 
             this.device.on("message", this.onDeviceMessage);
+            this.device.sendIntroduction().then(this.onDeviceMessage);
+
+            this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
             this.log(`accessory configured.`);
         } catch (error) {
