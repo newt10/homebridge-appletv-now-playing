@@ -2,9 +2,7 @@ module.exports = class SwitchAccessory {
     constructor(platform, config, device) {
         this.type = "Switch";
 
-        this.createAccessory = this.createAccessory.bind(this);
-        this.updateAccessory = this.updateAccessory.bind(this);
-
+        this.configureAccessory = this.configureAccessory.bind(this);
         this.configureServices = this.configureServices.bind(this);
         this.configureSwitchService = this.configureSwitchService.bind(this);
 
