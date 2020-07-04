@@ -5,6 +5,8 @@ const appletv = require("node-appletv-x");
 
 module.exports = class TelevisionAccessory {
     constructor(platform, config, device) {
+        this.characteristics = require("./characteristics")(platform.api);
+
         this.type = "Television";
 
         this.configureAccessory = this.configureAccessory.bind(this);
