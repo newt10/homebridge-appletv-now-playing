@@ -22,7 +22,7 @@ module.exports = class Accessory {
         this.config = config;
         this.device = device;
 
-        this.type = type.toLowerCase();
+        this.type = type;
         this.power = false;
 
         this.characteristics = require("./characteristics")(platform.api);
@@ -88,8 +88,8 @@ module.exports = class Accessory {
             this.instance
                 .getService(this.platform.api.hap.Service.AccessoryInformation)
                 .setCharacteristic(this.platform.api.hap.Characteristic.Manufacturer, AccessoryManufacturer)
-                .setCharacteristic(this.platform.api.hap.Characteristic.Model, AccessoryModel)
-                .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, this.device.uid)
+                .setCharacteristic(this.platform.api.hap.Characteristic.Model, `${AccessoryModel} ${this.type}`)
+                .setCharacteristic(this.platform.api.hap.Characteristic.SerialNumber, `${this.device.uid}-${this.type}`)
                 .setCharacteristic(this.platform.api.hap.Characteristic.Name, `${this.config.name} ${this.type}`);
 
             this.log(`${this.type} accessory information service configured.`);
