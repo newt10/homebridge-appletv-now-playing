@@ -336,11 +336,9 @@ module.exports = class TelevisionAccessory {
     onDeviceMessage(message) {
         try {
             if (message.payload) {
-                if (message.payload.logicalDeviceCount <= 0) {
-                    power = false;
-                }
+                let power = false;
 
-                if (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive) {
+                if (message.payload.logicalDeviceCount > 0 && (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive)) {
                     power = true;
                 }
 
