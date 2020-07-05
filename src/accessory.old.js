@@ -58,19 +58,19 @@ class Accessory {
     }
 
     onMessage(message) {
-        if (message.payload.logicalDeviceCount) {
-            if (message.payload.logicalDeviceCount <= 0) {
+        if (message.payload) {
+            if (!!message.payload.logicalDeviceCount) {
+                if (message.payload.logicalDeviceCount > 0 && (!messagePayload.isProxyGroupPlayer || messagePayload.isAirplayActive)) {
+                    this.power = true;
+                }
+
                 this.power = false;
+
+                this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
+                this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
+
+                this.platform.debug(`auto power set to ${this.power ? "on" : "off"} for ${this.primaryService.type} service (${this.config.name} [${this.device.uid}]) .`);
             }
-
-            if (!messagePayload.isProxyGroupPlayer || messagePayload.isAirplayActive) {
-                this.power = true;
-            }
-
-            this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.On).updateValue(this.power);
-            this.primaryService && this.primaryService.updateCharacteristic(this.platform.api.hap.Characteristic.Active).updateValue(this.power);
-
-            this.platform.debug(`auto power set to ${this.power ? "on" : "off"} for ${this.primaryService.type} service (${this.config.name} [${this.device.uid}]) .`);
         }
     }
 
