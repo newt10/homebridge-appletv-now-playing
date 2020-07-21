@@ -125,6 +125,15 @@ class Platform {
                 } else {
                     this.debug(`(${deviceConfiguration.name}) tv accessory disabled => ${credentials.uniqueIdentifier}.`);
 
+                    this.log(
+                        this.accessories.map((a) => {
+                            return {
+                                uid: a.context.uid,
+                                category: a.context.category,
+                            };
+                        })
+                    );
+
                     let accessory = lodash.find(
                         this.accessories,
                         (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
@@ -132,6 +141,7 @@ class Platform {
 
                     if (accessory) {
                         this.debug(`(${deviceConfiguration.name}) removing tv accessory => ${credentials.uniqueIdentifier}.`);
+
                         this.unregisterAccessory(accessory);
                     }
                 }
