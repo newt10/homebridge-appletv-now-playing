@@ -120,7 +120,7 @@ class Platform {
                 } else {
                     let accessory = lodash.find(
                         this.accessories,
-                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.platform.api.hap.Categories.TELEVISION
+                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
                     );
 
                     if(accessory) {
