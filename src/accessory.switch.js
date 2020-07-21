@@ -34,8 +34,6 @@ module.exports = class SwitchAccessory {
         this.active = this.platform.api.hap.Characteristic.Active.INACTIVE;
 
         this.configureAccessory();
-
-        //this.device.on("nowPlaying", this.onNowPlaying);
     }
 
     debug(message) {
@@ -81,8 +79,8 @@ module.exports = class SwitchAccessory {
             this.configureServices();
 
             this.device.on("message", this.onDeviceMessage);
-            this.log("sending introduction");
-            this.device.sendIntroduction();
+            this.device.on("nowPlaying", this.onNowPlaying);
+            //this.device.sendIntroduction();
             
             // .then(message => {
             //     this.log("received introduction");
