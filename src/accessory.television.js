@@ -37,7 +37,7 @@ module.exports = class TelevisionAccessory {
 
         this.configureAccessory();
 
-        this.device.on("nowPlaying", this.onNowPlaying);
+        //this.device.on("nowPlaying", this.onNowPlaying);
     }
 
     debug(message) {
@@ -82,10 +82,10 @@ module.exports = class TelevisionAccessory {
 
             this.configureServices();
 
-            this.device.on("message", this.onDeviceMessage);
-            this.device.sendIntroduction().then(this.onDeviceMessage);
+            //this.device.on("message", this.onDeviceMessage);
+            //this.device.sendIntroduction().then(this.onDeviceMessage);
 
-            this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
+            //this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
             this.log(`accessory configured.`);
         } catch (error) {
