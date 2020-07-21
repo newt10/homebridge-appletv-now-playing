@@ -139,13 +139,13 @@ class Platform {
                     //     (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
                     // );
 
-                    if (accessory) {
+                    //if (accessory) {
                         this.debug(`(${deviceConfiguration.name}) attempting to remove tv accessory => ${credentials.uniqueIdentifier}.`);
 
-                        let uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}`);
+                        let uid = this.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}`);
 
                         this.unregisterAccessory(new this.platform.api.platformAccessory(`${deviceConfiguration.name} Television`, uid) );
-                    }
+                    //}
                 }
             }
         } catch (error) {
