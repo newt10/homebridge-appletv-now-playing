@@ -82,10 +82,12 @@ module.exports = class SwitchAccessory {
 
             this.device.on("message", this.onDeviceMessage);
             this.log("sending introduction");
-            this.device.sendIntroduction().then(message => {
-                this.log("received introduction");
-                this.onDeviceMessage(message);
-            });
+            this.device.sendIntroduction();
+            
+            // .then(message => {
+            //     this.log("received introduction");
+            //     this.onDeviceMessage(message);
+            // });
 
             //this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
