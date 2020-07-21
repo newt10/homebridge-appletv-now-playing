@@ -117,14 +117,17 @@ class Platform {
                 new SwitchAccessory(this, this.config.devices[0], connectedDevice);
 
                 if (this.config.devices[0].showTvAccessory) {
+                    this.debug(`(${deviceConfiguration.name}) tv accessory enabled => ${credentials.uniqueIdentifier}.`);
                     new TelevisionAccessory(this, this.config.devices[0], connectedDevice);
                 } else {
+                    this.debug(`(${deviceConfiguration.name}) tv accessory disabled => ${credentials.uniqueIdentifier}.`);
                     let accessory = lodash.find(
                         this.accessories,
                         (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
                     );
 
                     if (accessory) {
+                        this.debug(`(${deviceConfiguration.name}) removing tv accessory => ${credentials.uniqueIdentifier}.`);
                         this.unregisterAccessory(accessory);
                     }
                 }
