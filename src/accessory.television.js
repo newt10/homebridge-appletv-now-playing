@@ -51,9 +51,10 @@ module.exports = class TelevisionAccessory {
             this.debug(`configuring ${this.type} accessory.`);
 
             this.uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}`);
+
             this.instance = lodash.find(
                 this.platform.accessories,
-                (accessory) => accessory.context.uid === this.device.uid.toLowerCase() && accessory.context.category === this.platform.api.hap.Categories.TELEVISION
+                (accessory) => accessory.context.uid === this.device.uid && accessory.context.category === this.platform.api.hap.Categories.TELEVISION
             );
 
             if (!this.instance) {
@@ -67,7 +68,7 @@ module.exports = class TelevisionAccessory {
             this.instance.displayName = `${this.config.name} ${this.type}`;
             this.instance.name = `${this.config.name} ${this.type}`;
             this.instance.context.category = this.platform.api.hap.Categories.TELEVISION;
-            this.instance.context.uid = this.device.uid.toLowerCase();
+            this.instance.context.uid = this.device.uid;
             this.instance.context.version = 2;
 
             this.configureServices();

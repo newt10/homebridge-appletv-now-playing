@@ -55,7 +55,7 @@ module.exports = class SwitchAccessory {
                     this.log(accessory.context.uid + ":" + this.device.uid);
                     this.log(accessory.context.category + ":" + this.platform.api.hap.Categories.SWITCH);
 
-                    return accessory.context.uid === this.device.uid.toLowerCase() && accessory.context.category === this.platform.api.hap.Categories.SWITCH;
+                    return accessory.context.uid === this.device.uid && accessory.context.category === this.platform.api.hap.Categories.SWITCH;
                 }
             );
 
@@ -74,7 +74,7 @@ module.exports = class SwitchAccessory {
             this.instance.displayName = `${this.config.name} ${this.type}`;
             this.instance.name = `${this.config.name} ${this.type}`;
             this.instance.context.category = this.platform.api.hap.Categories.SWITCH;
-            this.instance.context.uid = this.device.uid.toLowerCase();
+            this.instance.context.uid = this.device.uid;
             this.instance.context.version = 2;
 
             if (update) {

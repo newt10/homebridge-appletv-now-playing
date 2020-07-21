@@ -112,6 +112,8 @@ class Platform {
 
                 let connectedDevice = await devices[0].openConnection(credentials);
 
+                connectedDevice.uid = connectedDevice.uid.toLowerCase();
+
                 this.debug(`(${deviceConfiguration.name}) connected to device => ${credentials.uniqueIdentifier}.`);
 
                 new SwitchAccessory(this, this.config.devices[0], connectedDevice);
@@ -125,7 +127,7 @@ class Platform {
 
                     let accessory = lodash.find(
                         this.accessories,
-                        (accessory) => accessory.context.uid === connectedDevice.uid.toLowerCase() && accessory.context.category === this.api.hap.Categories.TELEVISION
+                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
                     );
 
                     if (accessory) {
