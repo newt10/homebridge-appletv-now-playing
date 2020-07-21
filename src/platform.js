@@ -123,7 +123,10 @@ class Platform {
                     this.debug(`(${deviceConfiguration.name}) tv accessory disabled => ${credentials.uniqueIdentifier}.`);
                     let accessory = lodash.find(
                         this.accessories,
-                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
+                        (accessory) => {
+                            this.debug(accessory);
+                            return accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION;
+                        }
                     );
 
                     if (accessory) {
