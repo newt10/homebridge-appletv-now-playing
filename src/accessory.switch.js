@@ -80,7 +80,7 @@ module.exports = class SwitchAccessory {
 
             this.device.on("message", this.onDeviceMessage);
             this.device.on("nowPlaying", this.onNowPlaying);
-            //this.device.sendIntroduction();
+            this.device.sendIntroduction();
             
             // .then(message => {
             //     this.log("received introduction");
