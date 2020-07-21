@@ -86,11 +86,8 @@ module.exports = class SwitchAccessory {
             this.device.on("message", this.onDeviceMessage);
             this.device.on("nowPlaying", this.onNowPlaying);
 
-            this.log(this.instance.UUID);
-
-            //this.device.sendIntroduction().then(this.onDeviceMessage);
-
-            // this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
+            this.device.sendIntroduction().then(this.onDeviceMessage);
+            this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
             this.log(`accessory configured.`);
         } catch (error) {

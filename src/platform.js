@@ -122,30 +122,6 @@ class Platform {
                     this.debug(`(${deviceConfiguration.name}) tv accessory enabled => ${credentials.uniqueIdentifier}.`);
 
                     new TelevisionAccessory(this, this.config.devices[0], connectedDevice);
-                } else {
-                    this.debug(`(${deviceConfiguration.name}) tv accessory disabled => ${credentials.uniqueIdentifier}.`);
-
-                    // this.log(
-                    //     this.accessories.map((a) => {
-                    //         return {
-                    //             uid: a.context.uid,
-                    //             category: a.context.category,
-                    //         };
-                    //     })
-                    // );
-
-                    // let accessory = lodash.find(
-                    //     this.accessories,
-                    //     (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
-                    // );
-
-                    //if (accessory) {
-                        this.debug(`(${deviceConfiguration.name}) attempting to remove tv accessory => ${credentials.uniqueIdentifier}.`);
-
-                        let uid = this.api.hap.uuid.generate(`${Platform.platformName}.${deviceConfiguration.uid}.Television`);
-
-                        this.unregisterAccessory(new this.api.platformAccessory(`${deviceConfiguration.name} Television`, uid) );
-                    //}
                 }
             }
         } catch (error) {
