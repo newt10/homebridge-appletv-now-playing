@@ -123,7 +123,7 @@ class Platform {
                         (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.platform.api.hap.Categories.TELEVISION
                     );
 
-                    if(!accessory) {
+                    if(accessory) {
                         this.unregisterAccessory(accessory);
                     }
                 }
