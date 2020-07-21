@@ -125,24 +125,26 @@ class Platform {
                 } else {
                     this.debug(`(${deviceConfiguration.name}) tv accessory disabled => ${credentials.uniqueIdentifier}.`);
 
-                    this.log(
-                        this.accessories.map((a) => {
-                            return {
-                                uid: a.context.uid,
-                                category: a.context.category,
-                            };
-                        })
-                    );
+                    // this.log(
+                    //     this.accessories.map((a) => {
+                    //         return {
+                    //             uid: a.context.uid,
+                    //             category: a.context.category,
+                    //         };
+                    //     })
+                    // );
 
-                    let accessory = lodash.find(
-                        this.accessories,
-                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
-                    );
+                    // let accessory = lodash.find(
+                    //     this.accessories,
+                    //     (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
+                    // );
 
                     if (accessory) {
-                        this.debug(`(${deviceConfiguration.name}) removing tv accessory => ${credentials.uniqueIdentifier}.`);
+                        this.debug(`(${deviceConfiguration.name}) attempting to remove tv accessory => ${credentials.uniqueIdentifier}.`);
 
-                        this.unregisterAccessory(accessory);
+                        let uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}`);
+
+                        this.unregisterAccessory(new this.platform.api.platformAccessory(`${deviceConfiguration.name} Television`, uid) );
                     }
                 }
             }
