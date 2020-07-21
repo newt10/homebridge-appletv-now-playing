@@ -17,6 +17,7 @@ class Platform {
         this.config = config;
         this.api = api;
         this.logger = log;
+        this.retryCount = 0;
 
         this.accessories = [];
 
@@ -123,13 +124,19 @@ class Platform {
                         (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
                     );
 
-                    if(accessory) {
+                    if (accessory) {
                         this.unregisterAccessory(accessory);
                     }
                 }
             }
         } catch (error) {
             this.log(`unable to configure device => ${error}`);
+
+            if (this.retryCount < 5) {
+                this.log(`retrying to configure device => ${error}`);
+                this.retryCount++;
+                this.configureDevice(deviceConfiguration);
+            }
         }
     }
 
