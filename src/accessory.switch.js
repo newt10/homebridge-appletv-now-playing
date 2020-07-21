@@ -2,6 +2,7 @@ const Platform = require("./platform");
 
 const lodash = require("lodash");
 const appletv = require("node-appletv-x");
+const uuid = require("uuid");
 
 module.exports = class SwitchAccessory {
     constructor(platform, config, device) {
@@ -86,8 +87,23 @@ module.exports = class SwitchAccessory {
             this.device.on("message", this.onDeviceMessage);
             this.device.on("nowPlaying", this.onNowPlaying);
 
+            let body = {
+                uniqueIdentifier: uuid.v4(),
+                name: 'node-appletv-x',
+                localizedModelName: 'iPhone',
+                systemBuildVersion: '17C54',
+                applicationBundleIdentifier: 'com.apple.TVRemote',
+                applicationBundleVersion: '344.28',
+                protocolVersion: 1,
+                allowsPairing: true,
+                lastSupportedMessageType: 45,
+                supportsSystemPairing: true,
+            };
+
+            this.device.sendMessage('DeviceInfoMessage', 'DeviceInfoMessage', body, true).then(this.onDeviceMessage);
+
             //this.device.sendIntroduction().then(this.onDeviceMessage);
-            this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
+            //this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
             this.log(`accessory configured.`);
         } catch (error) {
