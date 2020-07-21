@@ -144,7 +144,7 @@ class Platform {
 
                         let uid = this.api.hap.uuid.generate(`${Platform.platformName}.${deviceConfiguration.uid}.Television`);
 
-                        this.unregisterAccessory(new this.platform.api.platformAccessory(`${deviceConfiguration.name} Television`, uid) );
+                        this.unregisterAccessory(new this.api.platformAccessory(`${deviceConfiguration.name} Television`, uid) );
                     //}
                 }
             }
