@@ -81,7 +81,7 @@ module.exports = class SwitchAccessory {
             this.configureServices();
 
             this.device.on("message", this.onDeviceMessage);
-            //this.device.sendIntroduction().then(this.onDeviceMessage);
+            this.device.sendIntroduction().then(this.onDeviceMessage);
 
             //this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
@@ -222,6 +222,8 @@ module.exports = class SwitchAccessory {
     }
 
     onDeviceMessage(message) {
+        this.debug(`received message.`);
+
         try {
             if (message.payload) {
                 let power = false;
