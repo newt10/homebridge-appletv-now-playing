@@ -69,7 +69,7 @@ module.exports = class SwitchAccessory {
             this.instance.displayName = `${this.config.name} ${this.type}`;
             this.instance.name = `${this.config.name} ${this.type}`;
             this.instance.context.category = this.platform.api.hap.Categories.SWITCH;
-            this.instance.context.uid = this.device.uid;
+            this.instance.context.uid = this.device.uid.toLowerCase();
             this.instance.context.version = 2;
 
             if (update) {
@@ -83,7 +83,7 @@ module.exports = class SwitchAccessory {
 
             //this.device.sendIntroduction().then(this.onDeviceMessage);
 
-            //this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
+            // this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
             this.log(`accessory configured.`);
         } catch (error) {

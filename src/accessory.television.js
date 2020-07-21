@@ -67,7 +67,7 @@ module.exports = class TelevisionAccessory {
             this.instance.displayName = `${this.config.name} ${this.type}`;
             this.instance.name = `${this.config.name} ${this.type}`;
             this.instance.context.category = this.platform.api.hap.Categories.TELEVISION;
-            this.instance.context.uid = this.device.uid;
+            this.instance.context.uid = this.device.uid.toLowerCase();
             this.instance.context.version = 2;
 
             this.configureServices();
