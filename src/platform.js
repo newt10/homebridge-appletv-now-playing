@@ -93,7 +93,6 @@ class Platform {
             }
         } else {
             this.log(`loaded cached accessory => ${accessory.name || accessory.UUID}.`);
-            this.log(accessory);
 
             this.accessories.push(accessory);
         }
@@ -124,9 +123,7 @@ class Platform {
                     this.debug(`(${deviceConfiguration.name}) tv accessory disabled => ${credentials.uniqueIdentifier}.`);
                     let accessory = lodash.find(
                         this.accessories,
-                        (accessory) => {
-                            return accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION;
-                        }
+                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
                     );
 
                     if (accessory) {
