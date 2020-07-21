@@ -36,8 +36,6 @@ module.exports = class TelevisionAccessory {
         this.activeIdentifier = 0;
 
         this.configureAccessory();
-
-        //this.device.on("nowPlaying", this.onNowPlaying);
     }
 
     debug(message) {
@@ -58,15 +56,11 @@ module.exports = class TelevisionAccessory {
                 (accessory) => accessory.context.uid === this.device.uid && accessory.context.category === this.platform.api.hap.Categories.TELEVISION
             );
 
-            //let update = true;
-
             if (!this.instance) {
                 this.debug(`creating ${this.type} accessory.`);
 
                 this.instance = new this.platform.api.platformAccessory(`${this.config.name} ${this.type}`, this.uid);
                 this.platform.publishExternalAccessory(this.instance);
-
-                //update = false;
             }
 
             this.instance.category = this.platform.api.hap.Categories.TELEVISION;
@@ -76,16 +70,14 @@ module.exports = class TelevisionAccessory {
             this.instance.context.uid = this.device.uid;
             this.instance.context.version = 2;
 
-            // if (update) {
-            //     this.updateAccessory(this.instance);
-            // }
-
             this.configureServices();
 
-            //this.device.on("message", this.onDeviceMessage);
-            //this.device.sendIntroduction().then(this.onDeviceMessage);
+            this.device.on("message", this.onDeviceMessage);
+            this.device.on("nowPlaying", this.onNowPlaying);
 
-            //this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
+            this.device.sendIntroduction().then(this.onDeviceMessage);
+
+            this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
 
             this.log(`accessory configured.`);
         } catch (error) {
