@@ -142,6 +142,8 @@ class Platform {
                     //if (accessory) {
                         this.debug(`(${deviceConfiguration.name}) attempting to remove tv accessory => ${credentials.uniqueIdentifier}.`);
 
+                        this.log(this);
+
                         let uid = this.api.hap.uuid.generate(`${Platform.platformName}.${deviceConfiguration.uid}.${this.type}`);
 
                         this.unregisterAccessory(new this.platform.api.platformAccessory(`${deviceConfiguration.name} Television`, uid) );
