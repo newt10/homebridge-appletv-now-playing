@@ -118,12 +118,14 @@ class Platform {
 
                 if (this.config.devices[0].showTvAccessory) {
                     this.debug(`(${deviceConfiguration.name}) tv accessory enabled => ${credentials.uniqueIdentifier}.`);
+
                     new TelevisionAccessory(this, this.config.devices[0], connectedDevice);
                 } else {
                     this.debug(`(${deviceConfiguration.name}) tv accessory disabled => ${credentials.uniqueIdentifier}.`);
+
                     let accessory = lodash.find(
                         this.accessories,
-                        (accessory) => accessory.context.uid === connectedDevice.uid && accessory.context.category === this.api.hap.Categories.TELEVISION
+                        (accessory) => accessory.context.uid === connectedDevice.uid.toLowerCase() && accessory.context.category === this.api.hap.Categories.TELEVISION
                     );
 
                     if (accessory) {
