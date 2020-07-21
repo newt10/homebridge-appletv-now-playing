@@ -80,7 +80,7 @@ module.exports = class SwitchAccessory {
 
             this.configureServices();
 
-            //this.device.on("message", this.onDeviceMessage);
+            this.device.on("message", this.onDeviceMessage);
             //this.device.sendIntroduction().then(this.onDeviceMessage);
 
             //this.deviceInfoTimer = setInterval(() => this.device.sendIntroduction().then(this.onDeviceMessage), 5000);
@@ -236,12 +236,12 @@ module.exports = class SwitchAccessory {
 
                 this.power = power;
 
-                this.onPowerUpdate && this.onPowerUpdate(this.power);
+                !!this.onPowerUpdate && this.onPowerUpdate(this.power);
 
                 this.debug(`power status update => ${this.power ? "on" : "off"}.`);
             }
         } catch (error) {
-            this.log(`unable to update power status => ${error}`);
+            error ? this.log(`unable to update power status => ${error}`) : this.log(`unable to update power status => unhandled error`);
         }
     }
 };
