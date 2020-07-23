@@ -328,21 +328,23 @@ module.exports = class TelevisionAccessory {
     onDeviceMessage(message) {
         try {
             if (message.payload) {
-                let power = false;
+                if (m.payload.logicalDeviceCount === 0 || m.payload.logicalDeviceCount > 0) {
+                    let power = false;
 
-                if (message.payload.logicalDeviceCount > 0 && (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive)) {
-                    power = true;
+                    if (message.payload.logicalDeviceCount > 0 && (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive)) {
+                        power = true;
+                    }
+
+                    if (this.power === power) {
+                        return;
+                    }
+
+                    this.power = power;
+
+                    this.onPowerUpdate && this.onPowerUpdate(this.power);
+
+                    this.debug(`power status update => ${this.power ? "on" : "off"}.`);
                 }
-
-                if (this.power === power) {
-                    return;
-                }
-
-                this.power = power;
-
-                this.onPowerUpdate && this.onPowerUpdate(this.power);
-
-                this.debug(`power status update => ${this.power ? "on" : "off"}.`);
             }
         } catch (error) {
             this.log(`unable to update power status => ${error}`);

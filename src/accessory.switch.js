@@ -50,15 +50,12 @@ module.exports = class SwitchAccessory {
             this.debug(`configuring ${this.type} accessory.`);
 
             this.uid = this.platform.api.hap.uuid.generate(`${Platform.platformName}.${this.device.uid}.${this.type}`);
-            this.instance = lodash.find(
-                this.platform.accessories,
-                (accessory) => {
-                    this.log(accessory.context.uid + ":" + this.device.uid);
-                    this.log(accessory.context.category + ":" + this.platform.api.hap.Categories.SWITCH);
+            this.instance = lodash.find(this.platform.accessories, (accessory) => {
+                this.log(accessory.context.uid + ":" + this.device.uid);
+                this.log(accessory.context.category + ":" + this.platform.api.hap.Categories.SWITCH);
 
-                    return accessory.context.uid === this.device.uid && accessory.context.category === this.platform.api.hap.Categories.SWITCH;
-                }
-            );
+                return accessory.context.uid === this.device.uid && accessory.context.category === this.platform.api.hap.Categories.SWITCH;
+            });
 
             let update = true;
 
@@ -229,25 +226,23 @@ module.exports = class SwitchAccessory {
     onDeviceMessage(message) {
         try {
             if (message.payload) {
-                this.log(message.payload.logicalDeviceCount);
-                this.log(message.payload.isProxyGroupPlayer);
-                this.log(message.payload.isAirplayActive);
-                
-                let power = false;
+                if (m.payload.logicalDeviceCount === 0 || m.payload.logicalDeviceCount > 0) {
+                    let power = false;
 
-                if (message.payload.logicalDeviceCount > 0 && (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive)) {
-                    power = true;
+                    if (message.payload.logicalDeviceCount > 0 && (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive)) {
+                        power = true;
+                    }
+
+                    if (this.power === power) {
+                        return;
+                    }
+
+                    this.power = power;
+
+                    this.onPowerUpdate && this.onPowerUpdate(this.power);
+
+                    this.debug(`power status update => ${this.power ? "on" : "off"}.`);
                 }
-
-                if (this.power === power) {
-                    return;
-                }
-
-                this.power = power;
-
-                this.onPowerUpdate && this.onPowerUpdate(this.power);
-
-                this.debug(`power status update => ${this.power ? "on" : "off"}.`);
             }
         } catch (error) {
             this.log(`unable to update power status => ${error}`);
