@@ -204,6 +204,8 @@ module.exports = class SwitchAccessory {
 
     onNowPlaying(message) {
         try {
+            this.debug("received now plaing information");
+
             if (message && message.playbackState && message.playbackState.length > 1) {
                 message.playbackState = message.playbackState[0].toUpperCase() + message.playbackState.substring(1).toLowerCase();
             }
