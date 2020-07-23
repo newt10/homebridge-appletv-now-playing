@@ -226,7 +226,7 @@ module.exports = class SwitchAccessory {
     onDeviceMessage(message) {
         try {
             if (message.payload) {
-                if (m.payload.logicalDeviceCount === 0 || m.payload.logicalDeviceCount > 0) {
+                if (message.payload.logicalDeviceCount === 0 || message.payload.logicalDeviceCount > 0) {
                     let power = false;
 
                     if (message.payload.logicalDeviceCount > 0 && (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive)) {
