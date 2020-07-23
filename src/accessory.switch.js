@@ -229,6 +229,10 @@ module.exports = class SwitchAccessory {
     onDeviceMessage(message) {
         try {
             if (message.payload) {
+                this.log(message.payload.logicalDeviceCount);
+                this.log(message.payload.isProxyGroupPlayer);
+                this.log(message.payload.isAirplayActive);
+                
                 let power = false;
 
                 if (message.payload.logicalDeviceCount > 0 && (!message.payload.isProxyGroupPlayer || message.payload.isAirplayActive)) {
