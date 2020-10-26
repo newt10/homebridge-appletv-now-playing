@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "lodash": "^4.17.15",
-    "node-appletv-x": "^1.0.17",
+    "node-appletv-x": "^1.0.19",
     "readline-promise": "^1.0.4"
   },
   "engines": {
